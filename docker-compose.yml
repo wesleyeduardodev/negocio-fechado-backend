@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: negociofechado-db
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: negociofechado
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
