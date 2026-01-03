@@ -2,6 +2,7 @@ package com.negociofechado.modulos.solicitacao.document;
 
 import com.negociofechado.modulos.solicitacao.dto.CriarSolicitacaoRequest;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacaoDetalheResponse;
+import com.negociofechado.modulos.solicitacao.dto.SolicitacaoParaProfissionalResponse;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacaoResumoResponse;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacoesStatsResponse;
 
@@ -65,5 +66,26 @@ public interface SolicitacaoDocument {
     })
     ResponseEntity<SolicitacoesStatsResponse> stats(
             @Parameter(hidden = true) Long usuarioId);
+
+    @Operation(summary = "Listar solicitações disponíveis", description = "Lista solicitações disponíveis para o profissional na sua região e categorias")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Lista de solicitações disponíveis"),
+            @ApiResponse(responseCode = "400", description = "Profissional não cadastrado ou inativo"),
+            @ApiResponse(responseCode = "401", description = "Não autenticado")
+    })
+    ResponseEntity<Page<SolicitacaoParaProfissionalResponse>> listarDisponiveis(
+            @Parameter(hidden = true) Long usuarioId,
+            Pageable pageable);
+
+    @Operation(summary = "Buscar solicitação disponível", description = "Busca detalhes de uma solicitação disponível para o profissional")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Detalhes da solicitação"),
+            @ApiResponse(responseCode = "400", description = "Solicitação não disponível para você"),
+            @ApiResponse(responseCode = "401", description = "Não autenticado"),
+            @ApiResponse(responseCode = "404", description = "Solicitação não encontrada")
+    })
+    ResponseEntity<SolicitacaoDetalheResponse> buscarDisponivelPorId(
+            @Parameter(hidden = true) Long usuarioId,
+            Long id);
 
 }

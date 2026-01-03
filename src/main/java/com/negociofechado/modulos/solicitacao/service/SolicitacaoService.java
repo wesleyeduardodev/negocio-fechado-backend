@@ -5,8 +5,11 @@ import com.negociofechado.comum.exception.NegocioException;
 import com.negociofechado.comum.exception.RecursoNaoEncontradoException;
 import com.negociofechado.modulos.categoria.entity.Categoria;
 import com.negociofechado.modulos.categoria.repository.CategoriaRepository;
+import com.negociofechado.modulos.profissional.entity.PerfilProfissional;
+import com.negociofechado.modulos.profissional.repository.PerfilProfissionalRepository;
 import com.negociofechado.modulos.solicitacao.dto.CriarSolicitacaoRequest;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacaoDetalheResponse;
+import com.negociofechado.modulos.solicitacao.dto.SolicitacaoParaProfissionalResponse;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacaoResumoResponse;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacoesStatsResponse;
 import com.negociofechado.modulos.solicitacao.entity.Solicitacao;
@@ -25,6 +28,8 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +38,7 @@ public class SolicitacaoService {
     private final SolicitacaoRepository solicitacaoRepository;
     private final UsuarioRepository usuarioRepository;
     private final CategoriaRepository categoriaRepository;
+    private final PerfilProfissionalRepository perfilProfissionalRepository;
 
     @Transactional
     public SolicitacaoDetalheResponse criar(Long clienteId, CriarSolicitacaoRequest request) {
@@ -116,6 +122,89 @@ public class SolicitacaoService {
 
         long total = abertas + emAndamento + concluidas + canceladas;
         return new SolicitacoesStatsResponse(total, abertas, emAndamento, concluidas);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<SolicitacaoParaProfissionalResponse> listarDisponiveisParaProfissional(Long usuarioId, Pageable pageable) {
+        PerfilProfissional perfil = perfilProfissionalRepository.findByUsuarioId(usuarioId)
+                .orElseThrow(() -> new NegocioException("Você não possui um perfil profissional"));
+
+        if (!perfil.getAtivo()) {
+            throw new NegocioException("Seu perfil profissional está inativo");
+        }
+
+        Usuario usuario = perfil.getUsuario();
+        Integer cidadeIbgeId = usuario.getEndereco().getCidadeIbgeId();
+
+        Set<Long> categoriasIds = perfil.getCategorias().stream()
+                .map(Categoria::getId)
+                .collect(Collectors.toSet());
+
+        if (categoriasIds.isEmpty()) {
+            throw new NegocioException("Você não possui categorias cadastradas");
+        }
+
+        return solicitacaoRepository.findDisponiveisParaProfissional(
+                cidadeIbgeId,
+                categoriasIds,
+                usuarioId,
+                pageable
+        ).map(this::toParaProfissionalResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public SolicitacaoDetalheResponse buscarPorIdParaProfissional(Long usuarioId, Long solicitacaoId) {
+        PerfilProfissional perfil = perfilProfissionalRepository.findByUsuarioId(usuarioId)
+                .orElseThrow(() -> new NegocioException("Você não possui um perfil profissional"));
+
+        if (!perfil.getAtivo()) {
+            throw new NegocioException("Seu perfil profissional está inativo");
+        }
+
+        Solicitacao solicitacao = solicitacaoRepository.findByIdAndStatusAberta(solicitacaoId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Solicitação", solicitacaoId));
+
+        // Verifica se a solicitação é da mesma cidade do profissional
+        Usuario profissionalUsuario = perfil.getUsuario();
+        if (!solicitacao.getEndereco().getCidadeIbgeId().equals(profissionalUsuario.getEndereco().getCidadeIbgeId())) {
+            throw new NegocioException("Esta solicitação não está disponível para você");
+        }
+
+        // Verifica se a categoria está nas categorias do profissional
+        Set<Long> categoriasIds = perfil.getCategorias().stream()
+                .map(Categoria::getId)
+                .collect(Collectors.toSet());
+
+        if (!categoriasIds.contains(solicitacao.getCategoria().getId())) {
+            throw new NegocioException("Esta solicitação não está disponível para você");
+        }
+
+        // Verifica se não é uma solicitação própria
+        if (solicitacao.getCliente().getId().equals(usuarioId)) {
+            throw new NegocioException("Você não pode ver sua própria solicitação como profissional");
+        }
+
+        return toDetalheResponse(solicitacao);
+    }
+
+    private SolicitacaoParaProfissionalResponse toParaProfissionalResponse(Solicitacao solicitacao) {
+        Categoria categoria = solicitacao.getCategoria();
+        Endereco endereco = solicitacao.getEndereco();
+        Usuario cliente = solicitacao.getCliente();
+
+        return new SolicitacaoParaProfissionalResponse(
+                solicitacao.getId(),
+                solicitacao.getTitulo(),
+                solicitacao.getDescricao(),
+                cliente.getNome(),
+                categoria.getNome(),
+                categoria.getIcone(),
+                endereco.getBairro(),
+                endereco.getCidadeNome(),
+                endereco.getUf(),
+                solicitacao.getFotos() != null ? solicitacao.getFotos().size() : 0,
+                solicitacao.getCriadoEm()
+        );
     }
 
     private SolicitacaoResumoResponse toResumoResponse(Solicitacao solicitacao) {

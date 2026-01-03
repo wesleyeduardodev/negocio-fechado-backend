@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> {
 
@@ -26,5 +27,32 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
 
     @Query("SELECT s.status, COUNT(s) FROM Solicitacao s WHERE s.cliente.id = :clienteId GROUP BY s.status")
     List<Object[]> countByClienteIdGroupByStatus(@Param("clienteId") Long clienteId);
+
+    @Query(value = """
+        SELECT s FROM Solicitacao s
+        JOIN FETCH s.categoria c
+        JOIN FETCH s.cliente cl
+        WHERE s.status = 'ABERTA'
+        AND s.endereco.cidadeIbgeId = :cidadeIbgeId
+        AND c.id IN :categoriasIds
+        AND cl.id != :profissionalUsuarioId
+        ORDER BY s.criadoEm DESC
+        """,
+        countQuery = """
+        SELECT COUNT(s) FROM Solicitacao s
+        WHERE s.status = 'ABERTA'
+        AND s.endereco.cidadeIbgeId = :cidadeIbgeId
+        AND s.categoria.id IN :categoriasIds
+        AND s.cliente.id != :profissionalUsuarioId
+        """)
+    Page<Solicitacao> findDisponiveisParaProfissional(
+        @Param("cidadeIbgeId") Integer cidadeIbgeId,
+        @Param("categoriasIds") Set<Long> categoriasIds,
+        @Param("profissionalUsuarioId") Long profissionalUsuarioId,
+        Pageable pageable
+    );
+
+    @Query("SELECT s FROM Solicitacao s JOIN FETCH s.categoria JOIN FETCH s.cliente WHERE s.id = :id AND s.status = 'ABERTA'")
+    Optional<Solicitacao> findByIdAndStatusAberta(@Param("id") Long id);
 
 }

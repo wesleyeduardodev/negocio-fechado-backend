@@ -3,6 +3,7 @@ package com.negociofechado.modulos.solicitacao.controller;
 import com.negociofechado.modulos.solicitacao.document.SolicitacaoDocument;
 import com.negociofechado.modulos.solicitacao.dto.CriarSolicitacaoRequest;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacaoDetalheResponse;
+import com.negociofechado.modulos.solicitacao.dto.SolicitacaoParaProfissionalResponse;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacaoResumoResponse;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacoesStatsResponse;
 import com.negociofechado.modulos.solicitacao.service.SolicitacaoService;
@@ -73,6 +74,24 @@ public class SolicitacaoController implements SolicitacaoDocument {
     public ResponseEntity<SolicitacoesStatsResponse> stats(
             @AuthenticationPrincipal Long usuarioId) {
         SolicitacoesStatsResponse response = solicitacaoService.getStats(usuarioId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @GetMapping("/disponiveis")
+    public ResponseEntity<Page<SolicitacaoParaProfissionalResponse>> listarDisponiveis(
+            @AuthenticationPrincipal Long usuarioId,
+            @PageableDefault(size = 10) Pageable pageable) {
+        Page<SolicitacaoParaProfissionalResponse> response = solicitacaoService.listarDisponiveisParaProfissional(usuarioId, pageable);
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @GetMapping("/disponiveis/{id}")
+    public ResponseEntity<SolicitacaoDetalheResponse> buscarDisponivelPorId(
+            @AuthenticationPrincipal Long usuarioId,
+            @PathVariable Long id) {
+        SolicitacaoDetalheResponse response = solicitacaoService.buscarPorIdParaProfissional(usuarioId, id);
         return ResponseEntity.ok(response);
     }
 
