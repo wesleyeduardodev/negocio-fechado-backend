@@ -48,4 +48,14 @@ public interface InteresseRepository extends JpaRepository<Interesse, Long> {
 
     @Query("SELECT COUNT(i) FROM Interesse i WHERE i.profissional.id = :profissionalId AND i.status IN ('PENDENTE', 'VISUALIZADO')")
     int countEmNegociacaoByProfissionalId(@Param("profissionalId") Long profissionalId);
+
+    @Query("SELECT i FROM Interesse i " +
+           "JOIN FETCH i.solicitacao s " +
+           "JOIN FETCH s.categoria c " +
+           "JOIN FETCH s.cliente cl " +
+           "JOIN FETCH s.endereco e " +
+           "WHERE i.profissional.id = :profissionalId " +
+           "AND i.status = 'CONTRATADO' " +
+           "ORDER BY i.atualizadoEm DESC")
+    List<Interesse> findTrabalhosByProfissionalId(@Param("profissionalId") Long profissionalId);
 }

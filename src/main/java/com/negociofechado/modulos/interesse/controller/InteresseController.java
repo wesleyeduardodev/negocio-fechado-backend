@@ -2,6 +2,7 @@ package com.negociofechado.modulos.interesse.controller;
 
 import com.negociofechado.modulos.interesse.dto.CriarInteresseRequest;
 import com.negociofechado.modulos.interesse.dto.InteresseResponse;
+import com.negociofechado.modulos.interesse.dto.MeuTrabalhoResponse;
 import com.negociofechado.modulos.interesse.dto.ProfissionalStatsResponse;
 import com.negociofechado.modulos.interesse.service.InteresseService;
 
@@ -65,6 +66,13 @@ public class InteresseController {
     public ResponseEntity<ProfissionalStatsResponse> getStatsProfissional(
             @AuthenticationPrincipal Long usuarioId) {
         ProfissionalStatsResponse response = interesseService.getStatsProfissional(usuarioId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/meus-trabalhos")
+    public ResponseEntity<List<MeuTrabalhoResponse>> listarMeusTrabalhos(
+            @AuthenticationPrincipal Long usuarioId) {
+        List<MeuTrabalhoResponse> response = interesseService.listarMeusTrabalhos(usuarioId);
         return ResponseEntity.ok(response);
     }
 }

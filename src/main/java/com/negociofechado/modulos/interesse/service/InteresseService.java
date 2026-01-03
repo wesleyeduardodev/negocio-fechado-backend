@@ -4,7 +4,11 @@ import com.negociofechado.comum.exception.NegocioException;
 import com.negociofechado.comum.exception.RecursoNaoEncontradoException;
 import com.negociofechado.modulos.interesse.dto.CriarInteresseRequest;
 import com.negociofechado.modulos.interesse.dto.InteresseResponse;
+import com.negociofechado.modulos.interesse.dto.MeuTrabalhoResponse;
 import com.negociofechado.modulos.interesse.dto.ProfissionalStatsResponse;
+import com.negociofechado.comum.entity.Endereco;
+import com.negociofechado.modulos.avaliacao.entity.Avaliacao;
+import com.negociofechado.modulos.avaliacao.repository.AvaliacaoRepository;
 import com.negociofechado.modulos.interesse.entity.Interesse;
 import com.negociofechado.modulos.interesse.entity.StatusInteresse;
 import com.negociofechado.modulos.interesse.repository.InteresseRepository;
@@ -32,6 +36,7 @@ public class InteresseService {
     private final InteresseRepository interesseRepository;
     private final SolicitacaoRepository solicitacaoRepository;
     private final PerfilProfissionalRepository perfilProfissionalRepository;
+    private final AvaliacaoRepository avaliacaoRepository;
 
     @Transactional
     public InteresseResponse criar(Long usuarioId, CriarInteresseRequest request) {
@@ -146,6 +151,57 @@ public class InteresseService {
         int emNegociacao = interesseRepository.countEmNegociacaoByProfissionalId(perfil.getId());
 
         return new ProfissionalStatsResponse(interessesEnviados, contratados, emNegociacao);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MeuTrabalhoResponse> listarMeusTrabalhos(Long usuarioId) {
+        PerfilProfissional perfil = perfilProfissionalRepository.findByUsuarioId(usuarioId)
+                .orElseThrow(() -> new NegocioException("Voce nao possui um perfil profissional"));
+
+        return interesseRepository.findTrabalhosByProfissionalId(perfil.getId())
+                .stream()
+                .map(this::toMeuTrabalhoResponse)
+                .collect(Collectors.toList());
+    }
+
+    private MeuTrabalhoResponse toMeuTrabalhoResponse(Interesse interesse) {
+        Solicitacao solicitacao = interesse.getSolicitacao();
+        Usuario cliente = solicitacao.getCliente();
+        Endereco endereco = solicitacao.getEndereco();
+
+        // Buscar avaliacao se o trabalho foi concluido
+        Integer avaliacaoNota = null;
+        String avaliacaoComentario = null;
+        java.time.LocalDateTime avaliacaoData = null;
+
+        if (solicitacao.getStatus() == StatusSolicitacao.CONCLUIDA) {
+            var avaliacaoOpt = avaliacaoRepository.findBySolicitacaoId(solicitacao.getId());
+            if (avaliacaoOpt.isPresent()) {
+                Avaliacao avaliacao = avaliacaoOpt.get();
+                avaliacaoNota = avaliacao.getNota();
+                avaliacaoComentario = avaliacao.getComentario();
+                avaliacaoData = avaliacao.getCriadoEm();
+            }
+        }
+
+        return new MeuTrabalhoResponse(
+                interesse.getId(),
+                solicitacao.getId(),
+                solicitacao.getTitulo(),
+                solicitacao.getDescricao(),
+                solicitacao.getCategoria().getNome(),
+                solicitacao.getCategoria().getIcone(),
+                solicitacao.getStatus().name(),
+                cliente.getNome(),
+                cliente.getCelular(),
+                endereco.getBairro(),
+                endereco.getCidadeNome(),
+                endereco.getUf(),
+                interesse.getAtualizadoEm(),
+                avaliacaoNota,
+                avaliacaoComentario,
+                avaliacaoData
+        );
     }
 
     private InteresseResponse toResponse(Interesse interesse) {
