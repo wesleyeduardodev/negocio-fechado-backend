@@ -228,12 +228,20 @@ O app usa navegação por Drawer (menu lateral) ao invés de Bottom Tabs:
 
 | Opção | Cliente | Profissional |
 |-------|---------|--------------|
-| Home | Categorias para solicitar | Solicitações disponíveis |
+| Home | Categorias para solicitar | Solicitações disponíveis + Meus Trabalhos |
 | Minhas Solicitações | Lista de solicitações criadas | Lista de solicitações criadas |
-| Meus Interesses | - | Lista de interesses enviados |
 | Meu Perfil Profissional | - | Editar perfil profissional |
 | Editar Dados | Dados pessoais | Dados pessoais |
 | Sair | Logout | Logout |
+
+### Home do Profissional
+
+A Home do profissional mostra:
+
+1. **Stats** - Disponíveis / Em Negociação / Contratados
+2. **Gerenciar Perfil Profissional** - Link rápido
+3. **Solicitações Disponíveis** - Novas oportunidades na região/categorias
+4. **Meus Trabalhos** - Serviços contratados (em andamento e concluídos com avaliação)
 
 ---
 
@@ -813,6 +821,41 @@ O app usa navegação por Drawer (menu lateral) ao invés de Bottom Tabs:
 | comentario | String | Mínimo 10 caracteres |
 | criadoEm | LocalDateTime | Data de criação |
 
+### DTOs
+
+#### MeuTrabalhoResponse
+
+Retorno do endpoint `/api/interesses/meus-trabalhos` para o profissional:
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| interesseId | Long | ID do interesse |
+| solicitacaoId | Long | ID da solicitação |
+| solicitacaoTitulo | String | Título da solicitação |
+| solicitacaoDescricao | String | Descrição |
+| categoriaNome | String | Nome da categoria |
+| categoriaIcone | String | Ícone da categoria |
+| status | String | Status da solicitação (EM_ANDAMENTO, CONCLUIDA, etc.) |
+| clienteNome | String | Nome do cliente |
+| clienteCelular | String | Celular do cliente |
+| clienteBairro | String | Bairro do cliente |
+| clienteCidade | String | Cidade do cliente |
+| clienteUf | String | UF do cliente |
+| contratadoEm | LocalDateTime | Data da contratação |
+| avaliacaoNota | Integer | Nota recebida (1-5) - null se não avaliado |
+| avaliacaoComentario | String | Comentário da avaliação - null se não avaliado |
+| avaliacaoData | LocalDateTime | Data da avaliação - null se não avaliado |
+
+#### ProfissionalStatsResponse
+
+Retorno do endpoint `/api/interesses/stats`:
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| interessesEnviados | int | Total de interesses demonstrados |
+| contratados | int | Total de vezes contratado |
+| emNegociacao | int | Interesses pendentes/visualizados |
+
 ---
 
 ## Regras de Negócio
@@ -915,6 +958,8 @@ O app usa navegação por Drawer (menu lateral) ao invés de Bottom Tabs:
 |--------|----------|-----------|
 | POST | /api/interesses | Demonstrar interesse em solicitação |
 | GET | /api/interesses/solicitacao/{id} | Listar interessados na solicitação |
+| GET | /api/interesses/meus-trabalhos | Listar trabalhos do profissional (contratados) |
+| GET | /api/interesses/stats | Estatísticas do profissional |
 | PATCH | /api/interesses/{id}/visualizar | Marcar interesse como visualizado |
 | PATCH | /api/interesses/{id}/contratar | Contratar profissional |
 
@@ -1273,6 +1318,19 @@ volumes:
 | ⏳ Job: expirar solicitações ABERTAS (7 dias) | - |
 
 **Validação:** ✅ Fluxo completo funcionando (solicitar → interesse → WhatsApp → contratar → concluir → avaliar)
+
+---
+
+#### Fase 1.9 - Meus Trabalhos (Profissional) ✅
+| Backend | Mobile |
+|---------|--------|
+| ✅ GET /api/interesses/meus-trabalhos | ✅ Seção "Meus Trabalhos" na Home do profissional |
+| ✅ GET /api/interesses/stats | ✅ Stats: Disponíveis / Em Negociação / Contratados |
+| ✅ Incluir dados do cliente (nome, celular, endereço) | ✅ Card com status dinâmico (Em Andamento / Concluído) |
+| ✅ Incluir avaliação recebida (se concluído) | ✅ Exibir estrelas + comentário do cliente |
+| - | ✅ Botões Ligar/WhatsApp para trabalhos em andamento |
+
+**Validação:** ✅ Profissional vê todos seus trabalhos, com dados do cliente e avaliações
 
 ---
 
