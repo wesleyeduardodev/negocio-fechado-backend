@@ -14,9 +14,15 @@ public record OrcamentoResumoResponse(
     StatusOrcamento status,
     String profissionalNome,
     Long profissionalId,
+    String profissionalCelular,
     LocalDateTime criadoEm
 ) {
     public static OrcamentoResumoResponse fromEntity(Orcamento orcamento) {
+        String celular = null;
+        if (orcamento.getStatus() == StatusOrcamento.ACEITO) {
+            celular = orcamento.getProfissional().getUsuario().getCelular();
+        }
+
         return new OrcamentoResumoResponse(
             orcamento.getId(),
             orcamento.getValor(),
@@ -25,6 +31,7 @@ public record OrcamentoResumoResponse(
             orcamento.getStatus(),
             orcamento.getProfissional().getUsuario().getNome(),
             orcamento.getProfissional().getId(),
+            celular,
             orcamento.getCriadoEm()
         );
     }
