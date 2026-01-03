@@ -18,15 +18,13 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> 
            countQuery = "SELECT COUNT(s) FROM Solicitacao s WHERE s.cliente.id = :clienteId")
     Page<Solicitacao> findByClienteIdOrderByCriadoEmDesc(@Param("clienteId") Long clienteId, Pageable pageable);
 
-    List<Solicitacao> findByClienteIdAndStatusOrderByCriadoEmDesc(Long clienteId, StatusSolicitacao status);
+    @Query("SELECT s FROM Solicitacao s JOIN FETCH s.categoria WHERE s.cliente.id = :clienteId AND s.status = :status ORDER BY s.criadoEm DESC")
+    List<Solicitacao> findByClienteIdAndStatusOrderByCriadoEmDesc(@Param("clienteId") Long clienteId, @Param("status") StatusSolicitacao status);
 
     @Query("SELECT s FROM Solicitacao s JOIN FETCH s.categoria WHERE s.id = :id AND s.cliente.id = :clienteId")
     Optional<Solicitacao> findByIdAndClienteId(@Param("id") Long id, @Param("clienteId") Long clienteId);
 
-    @Query("SELECT COUNT(s) FROM Solicitacao s WHERE s.cliente.id = :clienteId")
-    long countByClienteId(@Param("clienteId") Long clienteId);
-
-    @Query("SELECT COUNT(s) FROM Solicitacao s WHERE s.cliente.id = :clienteId AND s.status = :status")
-    long countByClienteIdAndStatus(@Param("clienteId") Long clienteId, @Param("status") StatusSolicitacao status);
+    @Query("SELECT s.status, COUNT(s) FROM Solicitacao s WHERE s.cliente.id = :clienteId GROUP BY s.status")
+    List<Object[]> countByClienteIdGroupByStatus(@Param("clienteId") Long clienteId);
 
 }

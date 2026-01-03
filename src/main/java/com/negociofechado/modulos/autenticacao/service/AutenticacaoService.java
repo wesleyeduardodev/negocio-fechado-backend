@@ -51,6 +51,7 @@ public class AutenticacaoService {
         return gerarAuthResponse(usuario);
     }
 
+    @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
         Usuario usuario = usuarioRepository.findByCelular(request.celular())
                 .orElseThrow(() -> new NegocioException("Celular ou senha inválidos"));
@@ -66,6 +67,7 @@ public class AutenticacaoService {
         return gerarAuthResponse(usuario);
     }
 
+    @Transactional(readOnly = true)
     public AuthResponse refresh(RefreshRequest request) {
         if (!jwtService.isTokenValido(request.refreshToken())) {
             throw new NegocioException("Refresh token inválido ou expirado");

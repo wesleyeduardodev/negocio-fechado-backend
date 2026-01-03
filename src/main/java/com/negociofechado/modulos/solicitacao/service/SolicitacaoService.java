@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -67,11 +68,13 @@ public class SolicitacaoService {
         return toDetalheResponse(solicitacao);
     }
 
+    @Transactional(readOnly = true)
     public Page<SolicitacaoResumoResponse> listarPorCliente(Long clienteId, Pageable pageable) {
         return solicitacaoRepository.findByClienteIdOrderByCriadoEmDesc(clienteId, pageable)
                 .map(this::toResumoResponse);
     }
 
+    @Transactional(readOnly = true)
     public SolicitacaoDetalheResponse buscarPorId(Long clienteId, Long solicitacaoId) {
         Solicitacao solicitacao = solicitacaoRepository.findByIdAndClienteId(solicitacaoId, clienteId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Solicitação", solicitacaoId));
@@ -93,12 +96,25 @@ public class SolicitacaoService {
         solicitacaoRepository.save(solicitacao);
     }
 
+    @Transactional(readOnly = true)
     public SolicitacoesStatsResponse getStats(Long clienteId) {
-        long total = solicitacaoRepository.countByClienteId(clienteId);
-        long abertas = solicitacaoRepository.countByClienteIdAndStatus(clienteId, StatusSolicitacao.ABERTA);
-        long emAndamento = solicitacaoRepository.countByClienteIdAndStatus(clienteId, StatusSolicitacao.EM_ANDAMENTO);
-        long concluidas = solicitacaoRepository.countByClienteIdAndStatus(clienteId, StatusSolicitacao.CONCLUIDA);
+        List<Object[]> results = solicitacaoRepository.countByClienteIdGroupByStatus(clienteId);
 
+        long abertas = 0, emAndamento = 0, concluidas = 0, canceladas = 0;
+
+        for (Object[] row : results) {
+            StatusSolicitacao status = (StatusSolicitacao) row[0];
+            long count = (Long) row[1];
+
+            switch (status) {
+                case ABERTA -> abertas = count;
+                case EM_ANDAMENTO -> emAndamento = count;
+                case CONCLUIDA -> concluidas = count;
+                case CANCELADA -> canceladas = count;
+            }
+        }
+
+        long total = abertas + emAndamento + concluidas + canceladas;
         return new SolicitacoesStatsResponse(total, abertas, emAndamento, concluidas);
     }
 

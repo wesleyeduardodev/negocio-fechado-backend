@@ -5,6 +5,7 @@ import com.negociofechado.modulos.categoria.entity.Categoria;
 import com.negociofechado.modulos.categoria.repository.CategoriaRepository;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +17,7 @@ public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
 
+    @Transactional(readOnly = true)
     public List<CategoriaResponse> listarAtivas() {
         return categoriaRepository.findByAtivoTrueOrderByNomeAsc()
                 .stream()
