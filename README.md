@@ -1203,117 +1203,119 @@ volumes:
 
 ### MVP 1 - Core
 
-#### Fase 1.1 - Infraestrutura
+#### Fase 1.1 - Infraestrutura ✅
 | Backend | Mobile |
 |---------|--------|
-| Setup Spring Boot + estrutura de pastas | Setup Expo + estrutura de pastas |
-| Docker Compose (PostgreSQL) | Configurar navegação (Expo Router) |
-| Configurar profiles (dev/prod) | Configurar TanStack Query + Zustand |
-| Seed de categorias e cidades/bairros | - |
+| ✅ Setup Spring Boot + estrutura de pastas | ✅ Setup Expo + estrutura de pastas |
+| ✅ Docker Compose (PostgreSQL) | ✅ Configurar navegação (Expo Router) |
+| ✅ Configurar profiles (dev/prod) | ✅ Configurar TanStack Query + Zustand |
+| ✅ Seed de categorias e cidades/bairros | - |
 
-**Validação:** Ambos projetos rodando, banco com dados iniciais
+**Validação:** ✅ Ambos projetos rodando, banco com dados iniciais
 
 ---
 
-#### Fase 1.2 - Autenticação
+#### Fase 1.2 - Autenticação ✅
 | Backend | Mobile |
 |---------|--------|
-| POST /api/auth/registrar | Tela de Cadastro |
-| POST /api/auth/login | Tela de Login |
-| POST /api/auth/refresh | Tela Recuperar Senha |
-| Spring Security + JWT | Armazenamento seguro do token |
-| POST /api/auth/recuperar-senha | Integração com API |
+| ✅ POST /api/auth/registrar | ✅ Tela de Cadastro |
+| ✅ POST /api/auth/login | ✅ Tela de Login |
+| ✅ POST /api/auth/refresh | ⏳ Tela Recuperar Senha (não implementada) |
+| ✅ Spring Security + JWT | ✅ Armazenamento seguro do token |
+| ⏳ POST /api/auth/recuperar-senha | ⏳ Integração com API |
 
-**Validação:** Criar conta, logar, ver token funcionando
+**Validação:** ✅ Criar conta, logar, ver token funcionando
 
 ---
 
-#### Fase 1.3 - Usuário e Localização
+#### Fase 1.3 - Usuário e Localização ✅
 | Backend | Mobile |
 |---------|--------|
-| GET /api/usuarios/me | Tela Meu Perfil |
-| PUT /api/usuarios/me | Editar dados do perfil |
-| PUT /api/usuarios/me/senha | Alterar senha |
-| POST /api/usuarios/me/foto | Upload de foto |
-| GET /api/cidades | Dropdown de cidades |
-| GET /api/cidades/{id}/bairros | Dropdown de bairros |
-| GET /api/categorias | Grid de categorias na Home |
+| ✅ GET /api/usuarios/me | ✅ Tela Meu Perfil |
+| ✅ PUT /api/usuarios/me | ✅ Editar dados do perfil |
+| ⏳ PUT /api/usuarios/me/senha | ⏳ Alterar senha |
+| ⏳ POST /api/usuarios/me/foto | ⏳ Upload de foto |
+| ✅ GET /api/cidades | ✅ Dropdown de cidades |
+| ✅ GET /api/cidades/{id}/bairros | ✅ Dropdown de bairros |
+| ✅ GET /api/categorias | ✅ Grid de categorias na Home |
 
-**Validação:** Perfil completo, ver categorias na home
+**Validação:** ✅ Perfil completo, ver categorias na home
 
 ---
 
-#### Fase 1.4 - Profissional
+#### Fase 1.4 - Profissional ✅
 | Backend | Mobile |
 |---------|--------|
-| POST /api/profissionais | Tela Tornar-se Profissional |
-| GET /api/profissionais/me | Ver meu perfil profissional |
-| PUT /api/profissionais/me | Editar perfil profissional |
-| GET /api/profissionais/{id} | Tela Perfil do Profissional |
-| GET /api/profissionais/{id}/avaliacoes | Lista de avaliações no perfil |
+| ✅ POST /api/profissionais | ✅ Tela Tornar-se Profissional |
+| ✅ GET /api/profissionais/me | ✅ Ver meu perfil profissional |
+| ✅ PUT /api/profissionais/me | ✅ Editar perfil profissional |
+| ✅ GET /api/profissionais/{id} | ✅ Tela Perfil do Profissional |
+| ✅ GET /api/avaliacoes/profissional/{id} | ✅ Lista de avaliações no perfil |
 
-**Validação:** Usuário vira profissional, perfil público visível
+**Validação:** ✅ Usuário vira profissional, perfil público visível
 
 ---
 
-#### Fase 1.5 - Solicitações
+#### Fase 1.5 - Solicitações ✅
 | Backend | Mobile |
 |---------|--------|
-| POST /api/solicitacoes | Tela Nova Solicitação |
-| GET /api/solicitacoes | Tab Pedidos (minhas solicitações) |
-| GET /api/solicitacoes/{id} | Tela Detalhe da Solicitação |
-| GET /api/solicitacoes/disponiveis | Home do profissional (solicitações) |
-| PATCH /api/solicitacoes/{id}/cancelar | Botão cancelar |
-| POST /api/solicitacoes/{id}/imagens | Upload de fotos |
+| ✅ POST /api/solicitacoes | ✅ Tela Nova Solicitação |
+| ✅ GET /api/solicitacoes | ✅ Tab Pedidos (minhas solicitações) |
+| ✅ GET /api/solicitacoes/{id} | ✅ Tela Detalhe da Solicitação |
+| ✅ GET /api/solicitacoes/disponiveis | ✅ Home do profissional (solicitações) |
+| ✅ PATCH /api/solicitacoes/{id}/cancelar | ✅ Botão cancelar |
+| ⏳ POST /api/solicitacoes/{id}/imagens | ⏳ Upload de fotos |
 
-**Validação:** Criar solicitação, profissional vê na home
+**Validação:** ✅ Criar solicitação, profissional vê na home
 
 ---
 
-#### Fase 1.6 - Orçamentos
+#### Fase 1.6 - Orçamentos ✅
 | Backend | Mobile |
 |---------|--------|
-| POST /api/solicitacoes/{id}/orcamentos | Tela Enviar Orçamento |
-| GET /api/solicitacoes/{id}/orcamentos | Lista orçamentos na solicitação |
-| GET /api/orcamentos/enviados | Tab Pedidos (meus orçamentos) |
-| PATCH /api/orcamentos/{id}/aceitar | Botão aceitar orçamento |
-| Lógica: aceitar um recusa os outros | Atualizar status na tela |
+| ✅ POST /api/orcamentos/solicitacao/{id} | ✅ Tela Enviar Orçamento |
+| ✅ GET /api/orcamentos/solicitacao/{id} | ✅ Lista orçamentos na solicitação |
+| ✅ GET /api/orcamentos/enviados | ✅ Tela Meus Orçamentos |
+| ✅ PATCH /api/orcamentos/{id}/aceitar | ✅ Botão aceitar orçamento |
+| ✅ PATCH /api/orcamentos/{id}/recusar | ✅ Botão recusar orçamento |
+| ✅ Lógica: aceitar um recusa os outros | ✅ Atualizar status na tela |
 
-**Validação:** Profissional envia orçamento, cliente aceita
+**Validação:** ✅ Profissional envia orçamento, cliente aceita
 
 ---
 
-#### Fase 1.7 - Contato com Profissional
+#### Fase 1.7 - Contato com Profissional ✅
 | Backend | Mobile |
 |---------|--------|
-| Incluir celular do profissional no orçamento aceito | Botão "Ligar" (tel:+55...) |
-| - | Botão "WhatsApp" (wa.me/55...?text=...) |
-| - | Botões só aparecem quando orçamento está ACEITO |
+| ✅ Incluir celular do profissional no orçamento aceito | ✅ Botão "Ligar" (tel:+55...) |
+| - | ✅ Botão "WhatsApp" (wa.me/55...?text=...) |
+| - | ✅ Botões só aparecem quando orçamento está ACEITO |
 
-**Validação:** Cliente aceita orçamento e consegue ligar/abrir WhatsApp do profissional
+**Validação:** ✅ Cliente aceita orçamento e consegue ligar/abrir WhatsApp do profissional
 
 ---
 
-#### Fase 1.8 - Conclusão do Serviço
+#### Fase 1.8 - Conclusão do Serviço ✅
 | Backend | Mobile |
 |---------|--------|
-| PATCH /api/solicitacoes/{id}/concluir | Botão "Concluir Serviço" na solicitação |
-| Validar: só quem tem orçamento aceito | Só aparece quando status = EM_ANDAMENTO |
-| Status: EM_ANDAMENTO → CONCLUIDA | Confirmação antes de concluir |
+| ✅ PATCH /api/solicitacoes/{id}/concluir | ✅ Botão "Concluir Serviço" na solicitação |
+| ✅ Validar: só quem tem orçamento aceito | ✅ Só aparece quando status = EM_ANDAMENTO |
+| ✅ Status: EM_ANDAMENTO → CONCLUIDA | ✅ Confirmação antes de concluir |
 
-**Validação:** Cliente marca serviço como concluído
+**Validação:** ✅ Cliente marca serviço como concluído
 
 ---
 
-#### Fase 1.9 - Avaliações
+#### Fase 1.9 - Avaliações ✅
 | Backend | Mobile |
 |---------|--------|
-| POST /api/solicitacoes/{id}/avaliacoes | Tela Avaliar Serviço (após concluir) |
-| Calcular média do profissional | Nota 1-5 estrelas + comentário |
-| Atualizar mediaAvaliacoes e totalAvaliacoes | Exibir avaliações no perfil do profissional |
-| Job: expirar solicitações ABERTAS (7 dias) | - |
+| ✅ POST /api/avaliacoes/solicitacao/{id} | ✅ Tela Avaliar Serviço (após concluir) |
+| ✅ Calcular média do profissional | ✅ Nota 1-5 estrelas + comentário |
+| ✅ Atualizar mediaAvaliacoes e totalAvaliacoes | ✅ Exibir avaliações no perfil do profissional |
+| ✅ GET /api/orcamentos/stats | ✅ Estatísticas do profissional (orçamentos, finalizados) |
+| ⏳ Job: expirar solicitações ABERTAS (7 dias) | - |
 
-**Validação:** Fluxo completo funcionando (solicitar → orçar → aceitar → contatar → concluir → avaliar)
+**Validação:** ✅ Fluxo completo funcionando (solicitar → orçar → aceitar → contatar → concluir → avaliar)
 
 ---
 
