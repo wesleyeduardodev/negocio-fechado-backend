@@ -59,6 +59,17 @@ public interface SolicitacaoDocument {
             @Parameter(hidden = true) Long usuarioId,
             Long id);
 
+    @Operation(summary = "Concluir solicitação", description = "Marca uma solicitação em andamento como concluída")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Solicitação concluída"),
+            @ApiResponse(responseCode = "400", description = "Solicitação não pode ser concluída"),
+            @ApiResponse(responseCode = "401", description = "Não autenticado"),
+            @ApiResponse(responseCode = "404", description = "Solicitação não encontrada")
+    })
+    ResponseEntity<Void> concluir(
+            @Parameter(hidden = true) Long usuarioId,
+            Long id);
+
     @Operation(summary = "Estatísticas", description = "Retorna estatísticas das solicitações do usuário")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Estatísticas"),

@@ -104,6 +104,20 @@ public class SolicitacaoService {
         solicitacaoRepository.save(solicitacao);
     }
 
+    @Transactional
+    public void concluir(Long clienteId, Long solicitacaoId) {
+        Solicitacao solicitacao = solicitacaoRepository.findByIdAndClienteId(solicitacaoId, clienteId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Solicitação", solicitacaoId));
+
+        if (solicitacao.getStatus() != StatusSolicitacao.EM_ANDAMENTO) {
+            throw new NegocioException("Apenas solicitações em andamento podem ser concluídas");
+        }
+
+        solicitacao.setStatus(StatusSolicitacao.CONCLUIDA);
+        solicitacao.setAtualizadoEm(LocalDateTime.now());
+        solicitacaoRepository.save(solicitacao);
+    }
+
     @Transactional(readOnly = true)
     public SolicitacoesStatsResponse getStats(Long clienteId) {
         List<Object[]> results = solicitacaoRepository.countByClienteIdGroupByStatus(clienteId);
