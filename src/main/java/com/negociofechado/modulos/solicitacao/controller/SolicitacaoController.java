@@ -98,10 +98,10 @@ public class SolicitacaoController implements SolicitacaoDocument {
 
     @Override
     @GetMapping("/disponiveis/{id}")
-    public ResponseEntity<SolicitacaoDetalheResponse> buscarDisponivelPorId(
+    public ResponseEntity<SolicitacaoParaProfissionalResponse> buscarDisponivelPorId(
             @AuthenticationPrincipal Long usuarioId,
             @PathVariable Long id) {
-        SolicitacaoDetalheResponse response = solicitacaoService.buscarPorIdParaProfissional(usuarioId, id);
+        SolicitacaoParaProfissionalResponse response = solicitacaoService.buscarPorIdParaProfissional(usuarioId, id);
         return ResponseEntity.ok(response);
     }
 

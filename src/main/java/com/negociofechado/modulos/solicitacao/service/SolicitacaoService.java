@@ -5,7 +5,7 @@ import com.negociofechado.comum.exception.NegocioException;
 import com.negociofechado.comum.exception.RecursoNaoEncontradoException;
 import com.negociofechado.modulos.categoria.entity.Categoria;
 import com.negociofechado.modulos.categoria.repository.CategoriaRepository;
-import com.negociofechado.modulos.orcamento.repository.OrcamentoRepository;
+import com.negociofechado.modulos.interesse.repository.InteresseRepository;
 import com.negociofechado.modulos.profissional.entity.PerfilProfissional;
 import com.negociofechado.modulos.profissional.repository.PerfilProfissionalRepository;
 import com.negociofechado.modulos.solicitacao.dto.CriarSolicitacaoRequest;
@@ -40,7 +40,7 @@ public class SolicitacaoService {
     private final UsuarioRepository usuarioRepository;
     private final CategoriaRepository categoriaRepository;
     private final PerfilProfissionalRepository perfilProfissionalRepository;
-    private final OrcamentoRepository orcamentoRepository;
+    private final InteresseRepository interesseRepository;
 
     @Transactional
     public SolicitacaoDetalheResponse criar(Long clienteId, CriarSolicitacaoRequest request) {
@@ -68,6 +68,7 @@ public class SolicitacaoService {
                 .titulo(request.titulo())
                 .descricao(request.descricao())
                 .endereco(enderecoSolicitacao)
+                .urgencia(request.urgencia())
                 .fotos(request.fotos() != null ? new ArrayList<>(request.fotos()) : new ArrayList<>())
                 .status(StatusSolicitacao.ABERTA)
                 .build();
@@ -169,7 +170,7 @@ public class SolicitacaoService {
     }
 
     @Transactional(readOnly = true)
-    public SolicitacaoDetalheResponse buscarPorIdParaProfissional(Long usuarioId, Long solicitacaoId) {
+    public SolicitacaoParaProfissionalResponse buscarPorIdParaProfissional(Long usuarioId, Long solicitacaoId) {
         PerfilProfissional perfil = perfilProfissionalRepository.findByUsuarioId(usuarioId)
                 .orElseThrow(() -> new NegocioException("Você não possui um perfil profissional"));
 
@@ -200,7 +201,7 @@ public class SolicitacaoService {
             throw new NegocioException("Você não pode ver sua própria solicitação como profissional");
         }
 
-        return toDetalheResponse(solicitacao);
+        return toParaProfissionalResponse(solicitacao);
     }
 
     private SolicitacaoParaProfissionalResponse toParaProfissionalResponse(Solicitacao solicitacao) {
@@ -213,11 +214,13 @@ public class SolicitacaoService {
                 solicitacao.getTitulo(),
                 solicitacao.getDescricao(),
                 cliente.getNome(),
+                cliente.getCelular(),
                 categoria.getNome(),
                 categoria.getIcone(),
                 endereco.getBairro(),
                 endereco.getCidadeNome(),
                 endereco.getUf(),
+                solicitacao.getUrgencia().name(),
                 solicitacao.getFotos() != null ? solicitacao.getFotos().size() : 0,
                 solicitacao.getCriadoEm()
         );
@@ -251,12 +254,13 @@ public class SolicitacaoService {
                 categoria.getNome(),
                 categoria.getIcone(),
                 solicitacao.getStatus().name(),
+                solicitacao.getUrgencia().name(),
                 endereco.getUf(),
                 endereco.getCidadeIbgeId(),
                 endereco.getCidadeNome(),
                 endereco.getBairro(),
                 solicitacao.getFotos(),
-                orcamentoRepository.countBySolicitacaoId(solicitacao.getId()),
+                interesseRepository.countBySolicitacaoId(solicitacao.getId()),
                 solicitacao.getCriadoEm(),
                 solicitacao.getAtualizadoEm()
         );

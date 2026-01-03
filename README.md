@@ -32,17 +32,24 @@ Santa Luzia - MA possui ~59 mil habitantes. Não existe solução digital local 
 ### Solução
 
 App mobile onde:
-- **Clientes** publicam o que precisam e recebem orçamentos de profissionais
-- **Profissionais** veem solicitações da sua categoria e enviam orçamentos
+- **Clientes** publicam o que precisam e recebem interesses de profissionais
+- **Profissionais** veem solicitações da sua categoria e demonstram interesse, negociando via WhatsApp
 
 ### Modelo de Funcionamento
 
 ```
-Cliente publica       Profissionais        Cliente recebe       Serviço
-  solicitação    →    enviam orçamentos →  e escolhe um    →   executado
-                                                                    ↓
-                                                              Avaliação
+Cliente publica       Profissionais         Cliente vê           Negociacao
+  solicitação    →    demonstram interesse → interessados    →   via WhatsApp
+                                                                      ↓
+                                                                  Avaliação
 ```
+
+### Por que WhatsApp?
+
+1. **Realidade do mercado brasileiro**: Todo mundo usa WhatsApp, principalmente em cidades pequenas
+2. **Confiança**: Clientes preferem ver fotos e conversar diretamente antes de fechar
+3. **Sem custos de storage**: Fotos e videos ficam no WhatsApp, não no nosso servidor
+4. **Negociacao natural**: Preco, prazo e detalhes são combinados de forma organica
 
 ### Diferenciais
 
@@ -98,10 +105,10 @@ Cliente publica       Profissionais        Cliente recebe       Serviço
 │                    Backend (Spring Boot)                     │
 │                                                              │
 │  ┌──────────┐ ┌──────────┐ ┌────────────┐ ┌──────────────┐ │
-│  │   Auth   │ │  Usuario │ │ Solicitacao│ │   Orcamento  │ │
+│  │   Auth   │ │  Usuario │ │ Solicitacao│ │  Interesse   │ │
 │  └──────────┘ └──────────┘ └────────────┘ └──────────────┘ │
 │  ┌──────────┐ ┌──────────┐ ┌────────────┐                  │
-│  │ Conversa │ │Avaliacao │ │  Categoria │                  │
+│  │Avaliacao │ │Categoria │ │Profissional│                  │
 │  └──────────┘ └──────────┘ └────────────┘                  │
 └─────────────────────────────┬───────────────────────────────┘
                               │
@@ -159,28 +166,26 @@ Cliente publica       Profissionais        Cliente recebe       Serviço
 │  CLIENTE                                                                 │
 │  1. Abre o app → Vê categorias na Home                                  │
 │  2. Escolhe categoria (ex: Pedreiro)                                    │
-│  3. Descreve o que precisa + fotos (opcional)                           │
+│  3. Descreve o que precisa + define urgência                            │
 │  4. Publica solicitação                                                  │
 │                                                                          │
 │  SISTEMA                                                                 │
-│  5. Notifica TODOS os profissionais da categoria na cidade              │
+│  5. Solicitação fica visível para profissionais da categoria na cidade  │
 │                                                                          │
 │  PROFISSIONAL                                                            │
-│  6. Recebe push notification                                            │
-│  7. Abre app → Vê a solicitação na Home                                 │
-│  8. Envia orçamento (valor + prazo + mensagem)                          │
+│  6. Abre app → Vê a solicitação na Home                                 │
+│  7. Clica em "Tenho Interesse"                                          │
+│  8. App abre WhatsApp com mensagem pré-formatada para o cliente         │
 │                                                                          │
 │  CLIENTE                                                                 │
-│  9. Recebe notificação "Novo orçamento!"                                │
-│  10. Vê orçamentos recebidos                                            │
-│  11. Pode: ver perfil, conversar via chat, aceitar                      │
-│  12. Aceita um orçamento → outros são recusados automaticamente         │
+│  9. Recebe mensagem no WhatsApp                                         │
+│  10. Negocia diretamente (fotos, preço, prazo)                          │
+│  11. Marca profissional como "Contratado" no app                        │
 │                                                                          │
 │  EXECUÇÃO                                                                │
-│  13. Combinam detalhes via chat                                         │
-│  14. Profissional executa o serviço (fora do app)                       │
-│  15. Cliente marca como "Concluído"                                     │
-│  16. Cliente avalia (nota 1-5 + comentário)                             │
+│  12. Profissional executa o serviço (combinado via WhatsApp)            │
+│  13. Cliente marca como "Concluído"                                     │
+│  14. Cliente avalia (nota 1-5 + comentário)                             │
 │                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
@@ -189,11 +194,11 @@ Cliente publica       Profissionais        Cliente recebe       Serviço
 
 ## Telas
 
-### Mapa de Telas (12)
+### Mapa de Telas (10)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                         TELAS MVP 1 (12)                                 │
+│                         TELAS MVP 1 (10)                                 │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │  ONBOARDING (3)                                                         │
@@ -201,39 +206,34 @@ Cliente publica       Profissionais        Cliente recebe       Serviço
 │  ├── 2. Cadastro (nome, celular, senha, cidade, bairro)                 │
 │  └── 3. Recuperar Senha                                                 │
 │                                                                          │
-│  PRINCIPAL (5)                                                          │
-│  ├── 4. Home (categorias + solicitações)                                │
-│  ├── 5. Nova Solicitação (descrição + fotos)                            │
-│  ├── 6. Detalhe Solicitação (+ orçamentos recebidos)                    │
-│  ├── 7. Perfil do Profissional                                          │
-│  └── 8. Chat                                                            │
+│  PRINCIPAL (4)                                                          │
+│  ├── 4. Home (categorias + solicitações) - Drawer Menu                  │
+│  ├── 5. Nova Solicitação (descrição + urgência)                         │
+│  ├── 6. Detalhe Solicitação (+ interessados ou botão interesse)         │
+│  └── 7. Perfil do Profissional                                          │
 │                                                                          │
-│  PROFISSIONAL (2)                                                       │
-│  ├── 9. Tornar-se Profissional (categorias + bio)                       │
-│  └── 10. Enviar Orçamento                                               │
+│  PROFISSIONAL (1)                                                       │
+│  └── 8. Tornar-se Profissional (categorias + bio)                       │
 │                                                                          │
 │  COMPARTILHADO (2)                                                      │
-│  ├── 11. Meu Perfil / Configurações                                     │
-│  └── 12. Avaliar Serviço                                                │
+│  ├── 9. Meu Perfil / Configurações                                      │
+│  └── 10. Avaliar Serviço                                                │
 │                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Navegação (Bottom Tabs)
+### Navegação (Drawer Menu)
 
-```
-┌──────────┬──────────┬──────────┬──────────┐
-│    🏠    │    📋    │    💬    │    👤    │
-│   Home   │  Pedidos │   Chat   │  Perfil  │
-└──────────┴──────────┴──────────┴──────────┘
-```
+O app usa navegação por Drawer (menu lateral) ao invés de Bottom Tabs:
 
-| Tab | Usuário comum | Profissional |
-|-----|---------------|--------------|
-| Home | Categorias para solicitar | Categorias + Solicitações disponíveis |
-| Pedidos | Minhas solicitações | Minhas solicitações + Meus orçamentos |
-| Chat | Conversas | Conversas |
-| Perfil | Dados + "Quero ser profissional" | Dados + Editar perfil profissional |
+| Opção | Cliente | Profissional |
+|-------|---------|--------------|
+| Home | Categorias para solicitar | Solicitações disponíveis |
+| Minhas Solicitações | Lista de solicitações criadas | Lista de solicitações criadas |
+| Meus Interesses | - | Lista de interesses enviados |
+| Meu Perfil Profissional | - | Editar perfil profissional |
+| Editar Dados | Dados pessoais | Dados pessoais |
+| Sair | Logout | Logout |
 
 ---
 
@@ -406,40 +406,69 @@ Cliente publica       Profissionais        Cliente recebe       Serviço
 └─────────────────────────────────────────┘
 ```
 
-#### 6. Detalhe da Solicitação
+#### 6. Detalhe da Solicitação (Cliente)
 
 ```
 ┌─────────────────────────────────────────┐
 │  ←        Reforma do banheiro           │
 │                                         │
-│  Status: Aguardando orçamentos          │
+│  Status: Aberta                         │
 │  📅 Publicado há 2 horas                │
+│  ⏰ Esta semana                          │
 │                                         │
 │  Descrição                              │
 │  ─────────────────────────────────────  │
 │  "Preciso reformar o banheiro, trocar   │
 │   piso e fazer reboco na parede"        │
 │                                         │
-│  📍 Rua das Flores, 123 - Centro        │
+│  📍 Centro, Santa Luzia - MA            │
 │                                         │
-│  [img1] [img2]                          │
-│                                         │
-│  Orçamentos (2)                         │
+│  Interessados (2)                       │
 │  ─────────────────────────────────────  │
 │  ┌─────────────────────────────────┐   │
-│  │ [foto] João Silva    ⭐ 4.9     │   │
-│  │ R$ 1.500 • 5 dias               │   │
-│  │ "Inclui material e mão de obra" │   │
-│  │         [Chat]  [Aceitar]       │   │
+│  │ [J] João Silva                  │   │
+│  │ Interesse há 30 min             │   │
+│  │ "Pedreiro há 15 anos..."        │   │
+│  │   [Ligar]  [WhatsApp]           │   │
+│  │   [Contratar este profissional] │   │
 │  └─────────────────────────────────┘   │
 │  ┌─────────────────────────────────┐   │
-│  │ [foto] Pedro Lima    ⭐ 4.5     │   │
-│  │ R$ 1.800 • 7 dias               │   │
-│  │ "Só mão de obra"                │   │
-│  │         [Chat]  [Aceitar]       │   │
+│  │ [P] Pedro Lima                  │   │
+│  │ Interesse há 1 hora             │   │
+│  │   [Ligar]  [WhatsApp]           │   │
+│  │   [Contratar este profissional] │   │
 │  └─────────────────────────────────┘   │
 │                                         │
 │         Cancelar solicitação            │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+#### 6b. Detalhe da Solicitação (Profissional)
+
+```
+┌─────────────────────────────────────────┐
+│  ←        Solicitação Disponível        │
+│                                         │
+│  [M] Maria Silva                        │
+│      Cliente                            │
+│                                         │
+│  🔧 Pedreiro                            │
+│  Reforma do banheiro                    │
+│  ─────────────────────────────────────  │
+│  "Preciso reformar o banheiro, trocar   │
+│   piso e fazer reboco na parede"        │
+│                                         │
+│  📍 Centro, Santa Luzia - MA            │
+│  ⏰ Esta semana                          │
+│                                         │
+│  ┌─────────────────────────────────┐   │
+│  │     🤚 Tenho Interesse          │   │
+│  └─────────────────────────────────┘   │
+│                                         │
+│  Ao demonstrar interesse, o WhatsApp    │
+│  será aberto para você conversar        │
+│  diretamente com o cliente              │
 │                                         │
 └─────────────────────────────────────────┘
 ```
@@ -543,46 +572,7 @@ Cliente publica       Profissionais        Cliente recebe       Serviço
 └─────────────────────────────────────────┘
 ```
 
-#### 10. Enviar Orçamento
-
-```
-┌─────────────────────────────────────────┐
-│  ←        Enviar Orçamento              │
-│                                         │
-│  Reforma do banheiro                    │
-│  Cliente: Maria Silva                   │
-│  📍 Rua das Flores, 123 - Centro        │
-│  ─────────────────────────────────────  │
-│  "Preciso reformar o banheiro, trocar   │
-│   piso e fazer reboco"                  │
-│                                         │
-│  [img1] [img2]                          │
-│                                         │
-│  ─────────────────────────────────────  │
-│                                         │
-│  Valor do serviço *                     │
-│  ┌─────────────────────────────────┐   │
-│  │ R$  0,00                        │   │
-│  └─────────────────────────────────┘   │
-│                                         │
-│  Prazo estimado *                       │
-│  ┌─────────────────────────────────┐   │
-│  │ Ex: 5 dias, 1 semana...         │   │
-│  └─────────────────────────────────┘   │
-│                                         │
-│  Mensagem                               │
-│  ┌─────────────────────────────────┐   │
-│  │ Detalhes do orçamento...        │   │
-│  └─────────────────────────────────┘   │
-│                                         │
-│  ┌─────────────────────────────────┐   │
-│  │        Enviar orçamento         │   │
-│  └─────────────────────────────────┘   │
-│                                         │
-└─────────────────────────────────────────┘
-```
-
-#### 11. Meu Perfil
+#### 10. Meu Perfil
 
 ```
 ┌─────────────────────────────────────────┐
@@ -620,7 +610,7 @@ Cliente publica       Profissionais        Cliente recebe       Serviço
 └─────────────────────────────────────────┘
 ```
 
-#### 12. Avaliar Serviço
+#### 11. Avaliar Serviço
 
 ```
 ┌─────────────────────────────────────────┐
@@ -722,35 +712,27 @@ Cliente publica       Profissionais        Cliente recebe       Serviço
 │ cliente_id (FK) │───►   │ EM_ANDAMENTO        │
 │ categoria_id(FK)│───►   │ CONCLUIDA           │
 │ descricao       │       │ CANCELADA           │
-│ endereco        │       │ EXPIRADA            │
-│ cidade_id (FK)  │       └─────────────────────┘
-│ bairro_id (FK)  │
-│ status          │
-│ criado_em       │
-└────────┬────────┘
-         │
-    ┌────┴────┬──────────────┐
-    │         │              │
-    ▼         ▼              ▼
-┌────────┐ ┌────────┐ ┌──────────────────┐
-│orcament│ │convers │ │imagens_solicitaca│
-├────────┤ ├────────┤ ├──────────────────┤
-│ id     │ │ id     │ │ id               │
-│solit_id│ │solit_id│ │ solicitacao_id   │
-│prof_id │ │client_i│ │ url              │
-│ valor  │ │prof_id │ │ ordem            │
-│ prazo  │ └───┬────┘ └──────────────────┘
-│mensagem│     │
-│ status │     ▼
-│criad_em│ ┌────────┐    ┌─────────────────┐
-└────────┘ │mensagen│    │ STATUS_ORCAMENTO│
-           ├────────┤    ├─────────────────┤
-           │ id     │    │ ENVIADO         │
-           │conv_id │    │ ACEITO          │
-           │remet_id│    │ RECUSADO        │
-           │ texto  │    └─────────────────┘
-           │criad_em│
-           └────────┘
+│ endereco        │       └─────────────────────┘
+│ cidade_id (FK)  │
+│ bairro_id (FK)  │       ┌─────────────────────┐
+│ urgencia        │       │      URGENCIA       │
+│ status          │       ├─────────────────────┤
+│ criado_em       │       │ URGENTE             │
+└────────┬────────┘       │ ESTA_SEMANA         │
+         │                │ PROXIMAS_SEMANAS    │
+         │                │ APENAS_ORCANDO      │
+         ▼                └─────────────────────┘
+┌────────────────┐
+│   interesses   │       ┌─────────────────────┐
+├────────────────┤       │  STATUS_INTERESSE   │
+│ id (PK)        │       ├─────────────────────┤
+│ solicitacao_id │───►   │ PENDENTE            │
+│ profissional_id│───►   │ VISUALIZADO         │
+│ mensagem       │       │ CONTRATADO          │
+│ status         │       │ REJEITADO           │
+│ criado_em      │       └─────────────────────┘
+│ atualizado_em  │
+└────────────────┘
 
 
 ┌─────────────────┐
@@ -807,18 +789,17 @@ Cliente publica       Profissionais        Cliente recebe       Serviço
 | status | StatusSolicitacao | Enum |
 | criadoEm | LocalDateTime | Data de criação |
 
-#### Orcamento
+#### Interesse
 
 | Campo | Tipo | Descrição |
 |-------|------|-----------|
 | id | Long | PK |
 | solicitacao | Solicitacao | FK |
-| profissional | Usuario | FK |
-| valor | BigDecimal | Valor em reais |
-| prazo | String | Ex: "5 dias" |
-| mensagem | String | Observações |
-| status | StatusOrcamento | Enum |
+| profissional | PerfilProfissional | FK |
+| mensagem | String | Mensagem opcional (máx 500 chars) |
+| status | StatusInteresse | Enum (PENDENTE, VISUALIZADO, CONTRATADO, REJEITADO) |
 | criadoEm | LocalDateTime | Data de criação |
+| atualizadoEm | LocalDateTime | Última atualização |
 
 #### Avaliacao
 
@@ -845,14 +826,14 @@ Cliente publica       Profissionais        Cliente recebe       Serviço
 | Cancelamento | Pode cancelar a qualquer momento se ABERTA |
 | Visibilidade | Profissionais veem solicitações da sua cidade + categorias |
 
-### Orçamento
+### Interesse
 
 | Regra | Descrição |
 |-------|-----------|
-| Limite | 1 orçamento por profissional por solicitação |
-| Valor | Mínimo R$ 1,00 |
-| Aceite | Ao aceitar um, os outros viram RECUSADO |
-| Conversa | Criada automaticamente ao enviar orçamento |
+| Limite | 1 interesse por profissional por solicitação |
+| WhatsApp | Ao demonstrar interesse, abre WhatsApp com mensagem pré-formatada |
+| Contratação | Cliente marca profissional como "Contratado" → status solicitação vira EM_ANDAMENTO |
+| Visibilidade | Profissional só vê solicitações da sua cidade e categorias |
 
 ### Avaliação
 
@@ -928,22 +909,14 @@ Cliente publica       Profissionais        Cliente recebe       Serviço
 | PATCH | /api/solicitacoes/{id}/cancelar | Cancelar |
 | PATCH | /api/solicitacoes/{id}/concluir | Marcar como concluída |
 
-### Orçamentos
+### Interesses
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
-| POST | /api/solicitacoes/{id}/orcamentos | Enviar orçamento |
-| GET | /api/solicitacoes/{id}/orcamentos | Listar orçamentos da solicitação |
-| GET | /api/orcamentos/enviados | Meus orçamentos enviados |
-| PATCH | /api/orcamentos/{id}/aceitar | Aceitar orçamento |
-
-### Conversas
-
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| GET | /api/conversas | Minhas conversas |
-| GET | /api/conversas/{id}/mensagens | Mensagens da conversa |
-| WS | /ws/chat | WebSocket para chat |
+| POST | /api/interesses | Demonstrar interesse em solicitação |
+| GET | /api/interesses/solicitacao/{id} | Listar interessados na solicitação |
+| PATCH | /api/interesses/{id}/visualizar | Marcar interesse como visualizado |
+| PATCH | /api/interesses/{id}/contratar | Contratar profissional |
 
 ### Avaliações
 
@@ -992,8 +965,7 @@ negocio-fechado-backend/
 │       ├── localizacao/
 │       ├── profissional/
 │       ├── solicitacao/
-│       ├── orcamento/
-│       ├── conversa/
+│       ├── interesse/
 │       └── avaliacao/
 ├── src/main/resources/
 │   ├── application.yml
@@ -1037,17 +1009,15 @@ negocio-fechado-mobile/
 │   │   ├── chat.tsx
 │   │   └── perfil.tsx
 │   ├── solicitacao/
-│   │   ├── nova.tsx
 │   │   └── [id].tsx
 │   ├── profissional/
-│   │   ├── cadastro.tsx
 │   │   └── [id].tsx
-│   ├── orcamento/
+│   ├── avaliar/
 │   │   └── [solicitacaoId].tsx
-│   ├── conversa/
-│   │   └── [id].tsx
-│   ├── avaliacao/
-│   │   └── [solicitacaoId].tsx
+│   ├── criar-solicitacao.tsx
+│   ├── tornar-se-profissional.tsx
+│   ├── meu-perfil-profissional.tsx
+│   ├── editar-perfil.tsx
 │   └── _layout.tsx
 ├── src/
 │   ├── components/
@@ -1097,7 +1067,7 @@ negocio-fechado-mobile/
 
 | Contexto | Idioma | Exemplo |
 |----------|--------|---------|
-| Domínio/negócio | Português | `Solicitacao`, `Orcamento`, `Usuario` |
+| Domínio/negócio | Português | `Solicitacao`, `Interesse`, `Usuario` |
 | Técnico/estrutura | Inglês | `Service`, `Repository`, `Controller` |
 
 ---
@@ -1270,52 +1240,39 @@ volumes:
 
 ---
 
-#### Fase 1.6 - Orçamentos ✅
+#### Fase 1.6 - Interesses + WhatsApp ✅
 | Backend | Mobile |
 |---------|--------|
-| ✅ POST /api/orcamentos/solicitacao/{id} | ✅ Tela Enviar Orçamento |
-| ✅ GET /api/orcamentos/solicitacao/{id} | ✅ Lista orçamentos na solicitação |
-| ✅ GET /api/orcamentos/enviados | ✅ Tela Meus Orçamentos |
-| ✅ PATCH /api/orcamentos/{id}/aceitar | ✅ Botão aceitar orçamento |
-| ✅ PATCH /api/orcamentos/{id}/recusar | ✅ Botão recusar orçamento |
-| ✅ Lógica: aceitar um recusa os outros | ✅ Atualizar status na tela |
+| ✅ POST /api/interesses | ✅ Botão "Tenho Interesse" |
+| ✅ GET /api/interesses/solicitacao/{id} | ✅ Lista interessados na solicitação |
+| ✅ PATCH /api/interesses/{id}/contratar | ✅ Botão "Contratar profissional" |
+| ✅ Incluir celular do cliente na resposta | ✅ Abrir WhatsApp com mensagem pré-formatada |
+| - | ✅ Botões "Ligar" e "WhatsApp" para cliente |
 
-**Validação:** ✅ Profissional envia orçamento, cliente aceita
+**Validação:** ✅ Profissional demonstra interesse, WhatsApp abre, cliente contrata
 
 ---
 
-#### Fase 1.7 - Contato com Profissional ✅
-| Backend | Mobile |
-|---------|--------|
-| ✅ Incluir celular do profissional no orçamento aceito | ✅ Botão "Ligar" (tel:+55...) |
-| - | ✅ Botão "WhatsApp" (wa.me/55...?text=...) |
-| - | ✅ Botões só aparecem quando orçamento está ACEITO |
-
-**Validação:** ✅ Cliente aceita orçamento e consegue ligar/abrir WhatsApp do profissional
-
----
-
-#### Fase 1.8 - Conclusão do Serviço ✅
+#### Fase 1.7 - Conclusão do Serviço ✅
 | Backend | Mobile |
 |---------|--------|
 | ✅ PATCH /api/solicitacoes/{id}/concluir | ✅ Botão "Concluir Serviço" na solicitação |
-| ✅ Validar: só quem tem orçamento aceito | ✅ Só aparece quando status = EM_ANDAMENTO |
+| ✅ Validar: só quem tem profissional contratado | ✅ Só aparece quando status = EM_ANDAMENTO |
 | ✅ Status: EM_ANDAMENTO → CONCLUIDA | ✅ Confirmação antes de concluir |
 
 **Validação:** ✅ Cliente marca serviço como concluído
 
 ---
 
-#### Fase 1.9 - Avaliações ✅
+#### Fase 1.8 - Avaliações ✅
 | Backend | Mobile |
 |---------|--------|
 | ✅ POST /api/avaliacoes/solicitacao/{id} | ✅ Tela Avaliar Serviço (após concluir) |
 | ✅ Calcular média do profissional | ✅ Nota 1-5 estrelas + comentário |
 | ✅ Atualizar mediaAvaliacoes e totalAvaliacoes | ✅ Exibir avaliações no perfil do profissional |
-| ✅ GET /api/orcamentos/stats | ✅ Estatísticas do profissional (orçamentos, finalizados) |
 | ⏳ Job: expirar solicitações ABERTAS (7 dias) | - |
 
-**Validação:** ✅ Fluxo completo funcionando (solicitar → orçar → aceitar → contatar → concluir → avaliar)
+**Validação:** ✅ Fluxo completo funcionando (solicitar → interesse → WhatsApp → contratar → concluir → avaliar)
 
 ---
 
@@ -1323,12 +1280,11 @@ volumes:
 
 | Item | Descrição |
 |------|-----------|
-| Chat Interno | WebSocket para mensagens em tempo real |
-| Push Notifications | Firebase Cloud Messaging |
-| Autenticação SMS | Upgrade para verificação por SMS |
+| Push Notifications | Firebase Cloud Messaging para novos interesses |
+| Limite de interesses | Sistema de créditos (X gratuitos por mês) |
 | Favoritos | Salvar profissionais favoritos |
 | Portfólio | Fotos de trabalhos do profissional |
-| Métricas | Tempo de resposta, taxa de aceite |
+| Métricas | Taxa de contratação, avaliações |
 | Filtros | Filtro por bairro nas solicitações |
 
 ---

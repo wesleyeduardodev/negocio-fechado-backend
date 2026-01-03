@@ -11,12 +11,13 @@ public record SolicitacaoDetalheResponse(
         String categoriaNome,
         String categoriaIcone,
         String status,
+        String urgencia,
         String uf,
         Integer cidadeIbgeId,
         String cidadeNome,
         String bairro,
         List<String> fotos,
-        int totalOrcamentos,
+        int totalInteresses,
         LocalDateTime criadoEm,
         LocalDateTime atualizadoEm
 ) {}

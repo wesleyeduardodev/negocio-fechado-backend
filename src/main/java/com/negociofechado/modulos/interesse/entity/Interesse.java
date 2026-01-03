@@ -1,4 +1,4 @@
-package com.negociofechado.modulos.orcamento.entity;
+package com.negociofechado.modulos.interesse.entity;
 
 import com.negociofechado.modulos.profissional.entity.PerfilProfissional;
 import com.negociofechado.modulos.solicitacao.entity.Solicitacao;
@@ -24,15 +24,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(
-    name = "orcamentos",
+    name = "interesses",
     uniqueConstraints = @UniqueConstraint(
         columnNames = {"solicitacao_id", "profissional_id"},
-        name = "uk_orcamento_solicitacao_profissional"
+        name = "uk_interesse_solicitacao_profissional"
     )
 )
 @Getter
@@ -40,7 +39,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Orcamento {
+public class Interesse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,19 +53,13 @@ public class Orcamento {
     @JoinColumn(name = "profissional_id", nullable = false)
     private PerfilProfissional profissional;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal valor;
-
-    @Column(name = "prazo_estimado", nullable = false, length = 100)
-    private String prazoEstimado;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(length = 500)
     private String mensagem;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private StatusOrcamento status = StatusOrcamento.PENDENTE;
+    private StatusInteresse status = StatusInteresse.PENDENTE;
 
     @Column(name = "criado_em", nullable = false, updatable = false)
     private LocalDateTime criadoEm;

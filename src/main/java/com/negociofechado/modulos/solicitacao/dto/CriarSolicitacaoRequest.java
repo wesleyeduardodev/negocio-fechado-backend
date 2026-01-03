@@ -1,5 +1,7 @@
 package com.negociofechado.modulos.solicitacao.dto;
 
+import com.negociofechado.modulos.solicitacao.entity.Urgencia;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,6 +19,9 @@ public record CriarSolicitacaoRequest(
         @NotBlank(message = "Descrição é obrigatória")
         @Size(min = 10, max = 1000, message = "Descrição deve ter entre 10 e 1000 caracteres")
         String descricao,
+
+        @NotNull(message = "Urgência é obrigatória")
+        Urgencia urgencia,
 
         List<String> fotos
 ) {}

@@ -6,8 +6,8 @@ import com.negociofechado.modulos.avaliacao.dto.AvaliacaoRequest;
 import com.negociofechado.modulos.avaliacao.dto.AvaliacaoResponse;
 import com.negociofechado.modulos.avaliacao.entity.Avaliacao;
 import com.negociofechado.modulos.avaliacao.repository.AvaliacaoRepository;
-import com.negociofechado.modulos.orcamento.entity.Orcamento;
-import com.negociofechado.modulos.orcamento.repository.OrcamentoRepository;
+import com.negociofechado.modulos.interesse.entity.Interesse;
+import com.negociofechado.modulos.interesse.repository.InteresseRepository;
 import com.negociofechado.modulos.profissional.entity.PerfilProfissional;
 import com.negociofechado.modulos.solicitacao.entity.Solicitacao;
 import com.negociofechado.modulos.solicitacao.entity.StatusSolicitacao;
@@ -28,7 +28,7 @@ public class AvaliacaoService {
 
     private final AvaliacaoRepository avaliacaoRepository;
     private final SolicitacaoRepository solicitacaoRepository;
-    private final OrcamentoRepository orcamentoRepository;
+    private final InteresseRepository interesseRepository;
     private final UsuarioRepository usuarioRepository;
 
     @Transactional
@@ -47,10 +47,10 @@ public class AvaliacaoService {
             throw new NegocioException("Esta solicitacao ja foi avaliada");
         }
 
-        Orcamento orcamentoAceito = orcamentoRepository.findAceitoBySolicitacaoId(solicitacaoId)
-                .orElseThrow(() -> new NegocioException("Nenhum orcamento aceito encontrado para esta solicitacao"));
+        Interesse interesseContratado = interesseRepository.findContratadoBySolicitacaoId(solicitacaoId)
+                .orElseThrow(() -> new NegocioException("Nenhum profissional contratado encontrado para esta solicitacao"));
 
-        PerfilProfissional profissional = orcamentoAceito.getProfissional();
+        PerfilProfissional profissional = interesseContratado.getProfissional();
 
         Avaliacao avaliacao = Avaliacao.builder()
                 .solicitacao(solicitacao)

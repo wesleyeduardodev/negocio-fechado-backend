@@ -71,6 +71,11 @@ public class Solicitacao {
     @Builder.Default
     private StatusSolicitacao status = StatusSolicitacao.ABERTA;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private Urgencia urgencia = Urgencia.ESTA_SEMANA;
+
     @Column(name = "criado_em", nullable = false, updatable = false)
     private LocalDateTime criadoEm;
 

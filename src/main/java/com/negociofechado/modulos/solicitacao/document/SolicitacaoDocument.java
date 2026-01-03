@@ -95,7 +95,7 @@ public interface SolicitacaoDocument {
             @ApiResponse(responseCode = "401", description = "Não autenticado"),
             @ApiResponse(responseCode = "404", description = "Solicitação não encontrada")
     })
-    ResponseEntity<SolicitacaoDetalheResponse> buscarDisponivelPorId(
+    ResponseEntity<SolicitacaoParaProfissionalResponse> buscarDisponivelPorId(
             @Parameter(hidden = true) Long usuarioId,
             Long id);
 

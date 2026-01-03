@@ -7,11 +7,13 @@ public record SolicitacaoParaProfissionalResponse(
     String titulo,
     String descricao,
     String clienteNome,
+    String clienteCelular,
     String categoriaNome,
     String categoriaIcone,
     String bairro,
     String cidadeNome,
     String uf,
+    String urgencia,
     Integer quantidadeFotos,
     LocalDateTime criadoEm
 ) {}
