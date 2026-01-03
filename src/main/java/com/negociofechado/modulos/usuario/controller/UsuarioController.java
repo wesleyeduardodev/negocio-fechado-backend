@@ -2,6 +2,7 @@ package com.negociofechado.modulos.usuario.controller;
 
 import com.negociofechado.modulos.usuario.document.UsuarioDocument;
 import com.negociofechado.modulos.usuario.dto.AlterarSenhaRequest;
+import com.negociofechado.modulos.usuario.dto.AtualizarModoRequest;
 import com.negociofechado.modulos.usuario.dto.AtualizarUsuarioRequest;
 import com.negociofechado.modulos.usuario.dto.UploadFotoRequest;
 import com.negociofechado.modulos.usuario.dto.UsuarioResponse;
@@ -12,6 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,6 +62,14 @@ public class UsuarioController implements UsuarioDocument {
             @Valid @RequestBody UploadFotoRequest request) {
         UsuarioResponse response = usuarioService.atualizarFoto(usuarioId, request);
         return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/me/modo")
+    public ResponseEntity<Void> atualizarModo(
+            @AuthenticationPrincipal Long usuarioId,
+            @Valid @RequestBody AtualizarModoRequest request) {
+        usuarioService.atualizarModoPreferido(usuarioId, request.modo());
+        return ResponseEntity.noContent().build();
     }
 
 }

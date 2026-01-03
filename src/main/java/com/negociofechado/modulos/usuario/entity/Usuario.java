@@ -54,6 +54,10 @@ public class Usuario {
     @Column(nullable = false)
     private Boolean ativo = true;
 
+    @Builder.Default
+    @Column(name = "modo_preferido", nullable = false, length = 20)
+    private String modoPreferido = "cliente";
+
     @PrePersist
     protected void onCreate() {
         criadoEm = LocalDateTime.now();

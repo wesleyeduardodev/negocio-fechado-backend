@@ -100,7 +100,8 @@ public class AutenticacaoService {
                 endereco.getUf(),
                 endereco.getCidadeIbgeId(),
                 endereco.getCidadeNome(),
-                endereco.getBairro()
+                endereco.getBairro(),
+                usuario.getModoPreferido()
         );
 
         return new AuthResponse(token, refreshToken, usuarioResponse);

@@ -72,6 +72,19 @@ public class UsuarioService {
         return toResponse(usuario);
     }
 
+    @Transactional
+    public void atualizarModoPreferido(Long id, String modoPreferido) {
+        if (!modoPreferido.equals("cliente") && !modoPreferido.equals("profissional")) {
+            throw new NegocioException("Modo invalido. Use 'cliente' ou 'profissional'");
+        }
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario", id));
+
+        usuario.setModoPreferido(modoPreferido);
+        usuarioRepository.save(usuario);
+    }
+
     private UsuarioResponse toResponse(Usuario usuario) {
         Endereco endereco = usuario.getEndereco();
         return new UsuarioResponse(

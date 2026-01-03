@@ -8,5 +8,6 @@ public record UsuarioAuthResponse(
         String uf,
         Integer cidadeIbgeId,
         String cidadeNome,
-        String bairro
+        String bairro,
+        String modoPreferido
 ) {}
