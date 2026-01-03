@@ -60,7 +60,7 @@ public class Solicitacao {
     @Embedded
     private Endereco endereco;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "solicitacao_fotos", joinColumns = @JoinColumn(name = "solicitacao_id"))
     @Column(name = "foto_url")
     @Builder.Default

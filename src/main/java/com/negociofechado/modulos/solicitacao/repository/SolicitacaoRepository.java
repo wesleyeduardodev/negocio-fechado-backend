@@ -14,11 +14,13 @@ import java.util.Optional;
 
 public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long> {
 
-    Page<Solicitacao> findByClienteIdOrderByCriadoEmDesc(Long clienteId, Pageable pageable);
+    @Query(value = "SELECT s FROM Solicitacao s JOIN FETCH s.categoria WHERE s.cliente.id = :clienteId ORDER BY s.criadoEm DESC",
+           countQuery = "SELECT COUNT(s) FROM Solicitacao s WHERE s.cliente.id = :clienteId")
+    Page<Solicitacao> findByClienteIdOrderByCriadoEmDesc(@Param("clienteId") Long clienteId, Pageable pageable);
 
     List<Solicitacao> findByClienteIdAndStatusOrderByCriadoEmDesc(Long clienteId, StatusSolicitacao status);
 
-    @Query("SELECT s FROM Solicitacao s WHERE s.id = :id AND s.cliente.id = :clienteId")
+    @Query("SELECT s FROM Solicitacao s JOIN FETCH s.categoria WHERE s.id = :id AND s.cliente.id = :clienteId")
     Optional<Solicitacao> findByIdAndClienteId(@Param("id") Long id, @Param("clienteId") Long clienteId);
 
     @Query("SELECT COUNT(s) FROM Solicitacao s WHERE s.cliente.id = :clienteId")
