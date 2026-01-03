@@ -4,6 +4,7 @@ import com.negociofechado.modulos.orcamento.document.OrcamentoDocument;
 import com.negociofechado.modulos.orcamento.dto.OrcamentoEnviadoResponse;
 import com.negociofechado.modulos.orcamento.dto.OrcamentoRequest;
 import com.negociofechado.modulos.orcamento.dto.OrcamentoResumoResponse;
+import com.negociofechado.modulos.orcamento.dto.ProfissionalStatsResponse;
 import com.negociofechado.modulos.orcamento.service.OrcamentoService;
 
 import jakarta.validation.Valid;
@@ -77,5 +78,12 @@ public class OrcamentoController implements OrcamentoDocument {
             @PathVariable Long id) {
         orcamentoService.recusar(usuarioId, id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<ProfissionalStatsResponse> getStatsProfissional(
+            @AuthenticationPrincipal Long usuarioId) {
+        ProfissionalStatsResponse response = orcamentoService.getStatsProfissional(usuarioId);
+        return ResponseEntity.ok(response);
     }
 }

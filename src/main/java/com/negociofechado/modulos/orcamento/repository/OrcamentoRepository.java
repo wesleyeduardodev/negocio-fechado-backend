@@ -75,4 +75,22 @@ public interface OrcamentoRepository extends JpaRepository<Orcamento, Long> {
         AND o.status = 'ACEITO'
         """)
     Optional<Orcamento> findAceitoBySolicitacaoId(@Param("solicitacaoId") Long solicitacaoId);
+
+    @Query("SELECT COUNT(o) FROM Orcamento o WHERE o.profissional.id = :profissionalId")
+    long countByProfissionalId(@Param("profissionalId") Long profissionalId);
+
+    @Query("""
+        SELECT COUNT(o) FROM Orcamento o
+        WHERE o.profissional.id = :profissionalId
+        AND o.status = 'PENDENTE'
+        """)
+    long countEmNegociacaoByProfissionalId(@Param("profissionalId") Long profissionalId);
+
+    @Query("""
+        SELECT COUNT(o) FROM Orcamento o
+        WHERE o.profissional.id = :profissionalId
+        AND o.status = 'ACEITO'
+        AND o.solicitacao.status = 'CONCLUIDA'
+        """)
+    long countFinalizadosByProfissionalId(@Param("profissionalId") Long profissionalId);
 }

@@ -6,6 +6,7 @@ import com.negociofechado.modulos.categoria.entity.Categoria;
 import com.negociofechado.modulos.orcamento.dto.OrcamentoEnviadoResponse;
 import com.negociofechado.modulos.orcamento.dto.OrcamentoRequest;
 import com.negociofechado.modulos.orcamento.dto.OrcamentoResumoResponse;
+import com.negociofechado.modulos.orcamento.dto.ProfissionalStatsResponse;
 import com.negociofechado.modulos.orcamento.entity.Orcamento;
 import com.negociofechado.modulos.orcamento.entity.StatusOrcamento;
 import com.negociofechado.modulos.orcamento.repository.OrcamentoRepository;
@@ -180,5 +181,17 @@ public class OrcamentoService {
         if (!categoriasIds.contains(solicitacao.getCategoria().getId())) {
             throw new NegocioException("Voce nao atua nesta categoria de servico");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public ProfissionalStatsResponse getStatsProfissional(Long usuarioId) {
+        PerfilProfissional perfil = perfilProfissionalRepository.findByUsuarioId(usuarioId)
+                .orElseThrow(() -> new NegocioException("Voce nao possui um perfil profissional"));
+
+        long orcamentosEnviados = orcamentoRepository.countByProfissionalId(perfil.getId());
+        long emNegociacao = orcamentoRepository.countEmNegociacaoByProfissionalId(perfil.getId());
+        long finalizados = orcamentoRepository.countFinalizadosByProfissionalId(perfil.getId());
+
+        return new ProfissionalStatsResponse(orcamentosEnviados, emNegociacao, finalizados);
     }
 }
