@@ -67,4 +67,12 @@ public interface OrcamentoRepository extends JpaRepository<Orcamento, Long> {
         @Param("orcamentoAceitoId") Long orcamentoAceitoId,
         @Param("status") StatusOrcamento status
     );
+
+    @Query("""
+        SELECT o FROM Orcamento o
+        JOIN FETCH o.profissional p
+        WHERE o.solicitacao.id = :solicitacaoId
+        AND o.status = 'ACEITO'
+        """)
+    Optional<Orcamento> findAceitoBySolicitacaoId(@Param("solicitacaoId") Long solicitacaoId);
 }

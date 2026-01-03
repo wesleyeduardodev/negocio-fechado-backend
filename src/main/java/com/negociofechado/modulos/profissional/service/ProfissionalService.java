@@ -3,6 +3,7 @@ package com.negociofechado.modulos.profissional.service;
 import com.negociofechado.comum.entity.Endereco;
 import com.negociofechado.comum.exception.NegocioException;
 import com.negociofechado.comum.exception.RecursoNaoEncontradoException;
+import com.negociofechado.modulos.avaliacao.repository.AvaliacaoRepository;
 import com.negociofechado.modulos.categoria.entity.Categoria;
 import com.negociofechado.modulos.categoria.repository.CategoriaRepository;
 import com.negociofechado.modulos.profissional.dto.AtualizarPerfilProfissionalRequest;
@@ -31,6 +32,7 @@ public class ProfissionalService {
     private final PerfilProfissionalRepository perfilRepository;
     private final UsuarioRepository usuarioRepository;
     private final CategoriaRepository categoriaRepository;
+    private final AvaliacaoRepository avaliacaoRepository;
 
     @Transactional
     public PerfilProfissionalResponse criar(Long usuarioId, CriarPerfilProfissionalRequest request) {
@@ -116,6 +118,9 @@ public class ProfissionalService {
                 .map(c -> new CategoriaResumoResponse(c.getId(), c.getNome(), c.getIcone()))
                 .toList();
 
+        Double media = avaliacaoRepository.calcularMediaPorProfissional(perfil.getId());
+        Long total = avaliacaoRepository.contarPorProfissional(perfil.getId());
+
         return new PerfilProfissionalResponse(
                 perfil.getId(),
                 usuario.getId(),
@@ -126,8 +131,8 @@ public class ProfissionalService {
                 endereco.getCidadeNome(),
                 endereco.getBairro(),
                 categoriasResponse,
-                0.0,
-                0,
+                media != null ? media : 0.0,
+                total != null ? total.intValue() : 0,
                 perfil.getAtivo(),
                 perfil.getCriadoEm()
         );
