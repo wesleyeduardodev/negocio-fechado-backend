@@ -5,6 +5,7 @@ import com.negociofechado.comum.exception.NegocioException;
 import com.negociofechado.comum.exception.RecursoNaoEncontradoException;
 import com.negociofechado.modulos.categoria.entity.Categoria;
 import com.negociofechado.modulos.categoria.repository.CategoriaRepository;
+import com.negociofechado.modulos.orcamento.repository.OrcamentoRepository;
 import com.negociofechado.modulos.profissional.entity.PerfilProfissional;
 import com.negociofechado.modulos.profissional.repository.PerfilProfissionalRepository;
 import com.negociofechado.modulos.solicitacao.dto.CriarSolicitacaoRequest;
@@ -39,6 +40,7 @@ public class SolicitacaoService {
     private final UsuarioRepository usuarioRepository;
     private final CategoriaRepository categoriaRepository;
     private final PerfilProfissionalRepository perfilProfissionalRepository;
+    private final OrcamentoRepository orcamentoRepository;
 
     @Transactional
     public SolicitacaoDetalheResponse criar(Long clienteId, CriarSolicitacaoRequest request) {
@@ -240,7 +242,7 @@ public class SolicitacaoService {
                 endereco.getCidadeNome(),
                 endereco.getBairro(),
                 solicitacao.getFotos(),
-                0, // TODO: contar orçamentos quando implementar
+                orcamentoRepository.countBySolicitacaoId(solicitacao.getId()),
                 solicitacao.getCriadoEm(),
                 solicitacao.getAtualizadoEm()
         );
