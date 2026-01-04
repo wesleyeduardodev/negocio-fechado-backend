@@ -1,6 +1,7 @@
 package com.negociofechado.modulos.solicitacao.controller;
 
 import com.negociofechado.modulos.solicitacao.document.SolicitacaoDocument;
+import com.negociofechado.modulos.solicitacao.dto.AtualizarSolicitacaoRequest;
 import com.negociofechado.modulos.solicitacao.dto.CriarSolicitacaoRequest;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacaoDetalheResponse;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacaoParaProfissionalResponse;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,6 +60,15 @@ public class SolicitacaoController implements SolicitacaoDocument {
             @AuthenticationPrincipal Long usuarioId,
             @PathVariable Long id) {
         SolicitacaoDetalheResponse response = solicitacaoService.buscarPorId(usuarioId, id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SolicitacaoDetalheResponse> atualizar(
+            @AuthenticationPrincipal Long usuarioId,
+            @PathVariable Long id,
+            @Valid @RequestBody AtualizarSolicitacaoRequest request) {
+        SolicitacaoDetalheResponse response = solicitacaoService.atualizar(usuarioId, id, request);
         return ResponseEntity.ok(response);
     }
 

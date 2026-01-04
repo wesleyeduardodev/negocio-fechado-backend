@@ -1,6 +1,7 @@
 package com.negociofechado.modulos.solicitacao.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record SolicitacaoParaProfissionalResponse(
     Long id,
@@ -14,6 +15,6 @@ public record SolicitacaoParaProfissionalResponse(
     String cidadeNome,
     String uf,
     String urgencia,
-    Integer quantidadeFotos,
+    List<String> fotos,
     LocalDateTime criadoEm
 ) {}

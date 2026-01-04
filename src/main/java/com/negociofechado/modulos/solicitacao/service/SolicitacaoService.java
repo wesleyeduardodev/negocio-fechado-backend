@@ -8,13 +8,16 @@ import com.negociofechado.modulos.categoria.repository.CategoriaRepository;
 import com.negociofechado.modulos.interesse.repository.InteresseRepository;
 import com.negociofechado.modulos.profissional.entity.PerfilProfissional;
 import com.negociofechado.modulos.profissional.repository.PerfilProfissionalRepository;
+import com.negociofechado.modulos.solicitacao.dto.AtualizarSolicitacaoRequest;
 import com.negociofechado.modulos.solicitacao.dto.CriarSolicitacaoRequest;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacaoDetalheResponse;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacaoParaProfissionalResponse;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacaoResumoResponse;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacoesStatsResponse;
 import com.negociofechado.modulos.solicitacao.entity.Solicitacao;
+import com.negociofechado.modulos.solicitacao.entity.SolicitacaoFoto;
 import com.negociofechado.modulos.solicitacao.entity.StatusSolicitacao;
+import com.negociofechado.modulos.solicitacao.repository.SolicitacaoFotoRepository;
 import com.negociofechado.modulos.solicitacao.repository.SolicitacaoRepository;
 import com.negociofechado.modulos.usuario.entity.Usuario;
 import com.negociofechado.modulos.usuario.repository.UsuarioRepository;
@@ -27,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,6 +39,7 @@ import java.util.stream.Collectors;
 public class SolicitacaoService {
 
     private final SolicitacaoRepository solicitacaoRepository;
+    private final SolicitacaoFotoRepository solicitacaoFotoRepository;
     private final UsuarioRepository usuarioRepository;
     private final CategoriaRepository categoriaRepository;
     private final PerfilProfissionalRepository perfilProfissionalRepository;
@@ -69,7 +72,6 @@ public class SolicitacaoService {
                 .descricao(request.descricao())
                 .endereco(enderecoSolicitacao)
                 .urgencia(request.urgencia())
-                .fotos(request.fotos() != null ? new ArrayList<>(request.fotos()) : new ArrayList<>())
                 .status(StatusSolicitacao.ABERTA)
                 .build();
 
@@ -88,6 +90,24 @@ public class SolicitacaoService {
         Solicitacao solicitacao = solicitacaoRepository.findByIdAndClienteId(solicitacaoId, clienteId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Solicitação", solicitacaoId));
 
+        return toDetalheResponse(solicitacao);
+    }
+
+    @Transactional
+    public SolicitacaoDetalheResponse atualizar(Long clienteId, Long solicitacaoId, AtualizarSolicitacaoRequest request) {
+        Solicitacao solicitacao = solicitacaoRepository.findByIdAndClienteId(solicitacaoId, clienteId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Solicitação", solicitacaoId));
+
+        if (solicitacao.getStatus() != StatusSolicitacao.ABERTA) {
+            throw new NegocioException("Apenas solicitações abertas podem ser editadas");
+        }
+
+        solicitacao.setTitulo(request.titulo());
+        solicitacao.setDescricao(request.descricao());
+        solicitacao.setUrgencia(request.urgencia());
+        solicitacao.setAtualizadoEm(LocalDateTime.now());
+
+        solicitacaoRepository.save(solicitacao);
         return toDetalheResponse(solicitacao);
     }
 
@@ -218,6 +238,11 @@ public class SolicitacaoService {
         Endereco endereco = solicitacao.getEndereco();
         Usuario cliente = solicitacao.getCliente();
 
+        List<String> fotosUrls = solicitacaoFotoRepository.findBySolicitacaoIdOrderByOrdem(solicitacao.getId())
+                .stream()
+                .map(SolicitacaoFoto::getUrl)
+                .toList();
+
         return new SolicitacaoParaProfissionalResponse(
                 solicitacao.getId(),
                 solicitacao.getTitulo(),
@@ -230,7 +255,7 @@ public class SolicitacaoService {
                 endereco.getCidadeNome(),
                 endereco.getUf(),
                 solicitacao.getUrgencia().name(),
-                solicitacao.getFotos() != null ? solicitacao.getFotos().size() : 0,
+                fotosUrls,
                 solicitacao.getCriadoEm()
         );
     }
@@ -255,6 +280,11 @@ public class SolicitacaoService {
         Categoria categoria = solicitacao.getCategoria();
         Endereco endereco = solicitacao.getEndereco();
 
+        List<String> fotosUrls = solicitacaoFotoRepository.findBySolicitacaoIdOrderByOrdem(solicitacao.getId())
+                .stream()
+                .map(SolicitacaoFoto::getUrl)
+                .toList();
+
         return new SolicitacaoDetalheResponse(
                 solicitacao.getId(),
                 solicitacao.getTitulo(),
@@ -268,7 +298,7 @@ public class SolicitacaoService {
                 endereco.getCidadeIbgeId(),
                 endereco.getCidadeNome(),
                 endereco.getBairro(),
-                solicitacao.getFotos(),
+                fotosUrls,
                 interesseRepository.countBySolicitacaoId(solicitacao.getId()),
                 solicitacao.getCriadoEm(),
                 solicitacao.getAtualizadoEm()

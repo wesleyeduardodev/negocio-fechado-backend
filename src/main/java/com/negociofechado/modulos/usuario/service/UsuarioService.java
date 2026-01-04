@@ -3,8 +3,6 @@ package com.negociofechado.modulos.usuario.service;
 import com.negociofechado.comum.entity.Endereco;
 import com.negociofechado.comum.exception.NegocioException;
 import com.negociofechado.comum.exception.RecursoNaoEncontradoException;
-import com.negociofechado.modulos.arquivo.dto.ArquivoResponse;
-import com.negociofechado.modulos.arquivo.service.ArquivoService;
 import com.negociofechado.modulos.usuario.dto.AlterarSenhaRequest;
 import com.negociofechado.modulos.usuario.dto.AtualizarUsuarioRequest;
 import com.negociofechado.modulos.usuario.dto.UsuarioResponse;
@@ -24,7 +22,7 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ArquivoService arquivoService;
+    private final UsuarioAvatarService avatarService;
 
     @Transactional(readOnly = true)
     public UsuarioResponse buscarPorId(Long id) {
@@ -70,9 +68,9 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", id));
 
-        ArquivoResponse arquivoResponse = arquivoService.uploadAvatar(id, foto);
+        String fotoUrl = avatarService.uploadAvatar(id, foto);
 
-        usuario.setFotoUrl(arquivoResponse.url());
+        usuario.setFotoUrl(fotoUrl);
         usuarioRepository.save(usuario);
         return toResponse(usuario);
     }
@@ -82,7 +80,9 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", id));
 
-        arquivoService.deletarAvatar(id);
+        if (usuario.getFotoUrl() != null) {
+            avatarService.deletarAvatar(id);
+        }
 
         usuario.setFotoUrl(null);
         usuarioRepository.save(usuario);

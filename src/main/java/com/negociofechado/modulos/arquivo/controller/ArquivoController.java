@@ -2,7 +2,7 @@ package com.negociofechado.modulos.arquivo.controller;
 
 import com.negociofechado.modulos.arquivo.document.ArquivoDocument;
 import com.negociofechado.modulos.arquivo.dto.ArquivoResponse;
-import com.negociofechado.modulos.arquivo.service.ArquivoService;
+import com.negociofechado.modulos.solicitacao.service.SolicitacaoFotoService;
 import com.negociofechado.modulos.solicitacao.service.SolicitacaoService;
 
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArquivoController implements ArquivoDocument {
 
-    private final ArquivoService arquivoService;
+    private final SolicitacaoFotoService solicitacaoFotoService;
     private final SolicitacaoService solicitacaoService;
 
     @Override
@@ -38,7 +38,7 @@ public class ArquivoController implements ArquivoDocument {
 
         solicitacaoService.verificarProprietario(solicitacaoId, usuarioId);
 
-        List<ArquivoResponse> response = arquivoService.uploadFotosSolicitacao(solicitacaoId, fotos);
+        List<ArquivoResponse> response = solicitacaoFotoService.uploadFotos(solicitacaoId, fotos);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -48,7 +48,7 @@ public class ArquivoController implements ArquivoDocument {
     public ResponseEntity<List<ArquivoResponse>> listarFotosSolicitacao(
             @PathVariable Long solicitacaoId) {
 
-        List<ArquivoResponse> response = arquivoService.listarFotosSolicitacao(solicitacaoId);
+        List<ArquivoResponse> response = solicitacaoFotoService.listarFotos(solicitacaoId);
 
         return ResponseEntity.ok(response);
     }
@@ -62,7 +62,7 @@ public class ArquivoController implements ArquivoDocument {
 
         solicitacaoService.verificarProprietario(solicitacaoId, usuarioId);
 
-        arquivoService.deletarFoto(fotoId);
+        solicitacaoFotoService.deletarFoto(fotoId);
 
         return ResponseEntity.noContent().build();
     }

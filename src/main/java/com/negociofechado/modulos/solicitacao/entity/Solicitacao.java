@@ -4,9 +4,8 @@ import com.negociofechado.comum.entity.Endereco;
 import com.negociofechado.modulos.categoria.entity.Categoria;
 import com.negociofechado.modulos.usuario.entity.Usuario;
 
-import jakarta.persistence.CollectionTable;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
@@ -60,11 +60,9 @@ public class Solicitacao {
     @Embedded
     private Endereco endereco;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "solicitacao_fotos", joinColumns = @JoinColumn(name = "solicitacao_id"))
-    @Column(name = "foto_url")
+    @OneToMany(mappedBy = "solicitacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
-    private List<String> fotos = new ArrayList<>();
+    private List<SolicitacaoFoto> fotos = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
