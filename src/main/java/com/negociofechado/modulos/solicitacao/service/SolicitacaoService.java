@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,6 +41,7 @@ public class SolicitacaoService {
 
     private final SolicitacaoRepository solicitacaoRepository;
     private final SolicitacaoFotoRepository solicitacaoFotoRepository;
+    private final SolicitacaoFotoService solicitacaoFotoService;
     private final UsuarioRepository usuarioRepository;
     private final CategoriaRepository categoriaRepository;
     private final PerfilProfissionalRepository perfilProfissionalRepository;
@@ -106,6 +108,17 @@ public class SolicitacaoService {
         solicitacao.setDescricao(request.descricao());
         solicitacao.setUrgencia(request.urgencia());
         solicitacao.setAtualizadoEm(LocalDateTime.now());
+
+        if (request.fotos() != null) {
+            List<SolicitacaoFoto> fotosExistentes = solicitacaoFotoRepository.findBySolicitacaoIdOrderByOrdem(solicitacaoId);
+            Set<String> fotosParaManter = new HashSet<>(request.fotos());
+
+            for (SolicitacaoFoto foto : fotosExistentes) {
+                if (!fotosParaManter.contains(foto.getUrl())) {
+                    solicitacaoFotoService.deletarFoto(foto.getId());
+                }
+            }
+        }
 
         solicitacaoRepository.save(solicitacao);
         return toDetalheResponse(solicitacao);
@@ -210,13 +223,11 @@ public class SolicitacaoService {
         Solicitacao solicitacao = solicitacaoRepository.findByIdAndStatusAberta(solicitacaoId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Solicitação", solicitacaoId));
 
-        // Verifica se a solicitação é da mesma cidade do profissional
         Usuario profissionalUsuario = perfil.getUsuario();
         if (!solicitacao.getEndereco().getCidadeIbgeId().equals(profissionalUsuario.getEndereco().getCidadeIbgeId())) {
             throw new NegocioException("Esta solicitação não está disponível para você");
         }
 
-        // Verifica se a categoria está nas categorias do profissional
         Set<Long> categoriasIds = perfil.getCategorias().stream()
                 .map(Categoria::getId)
                 .collect(Collectors.toSet());
@@ -225,7 +236,6 @@ public class SolicitacaoService {
             throw new NegocioException("Esta solicitação não está disponível para você");
         }
 
-        // Verifica se não é uma solicitação própria
         if (solicitacao.getCliente().getId().equals(usuarioId)) {
             throw new NegocioException("Você não pode ver sua própria solicitação como profissional");
         }
