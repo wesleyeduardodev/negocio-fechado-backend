@@ -8,6 +8,10 @@ public record InteresseResponse(
     String profissionalNome,
     String profissionalCelular,
     String profissionalBio,
+    String profissionalFotoUrl,
+    Integer profissionalQuantidadeFotos,
+    Double profissionalMediaAvaliacao,
+    Long profissionalTotalAvaliacoes,
     String mensagem,
     String status,
     LocalDateTime criadoEm

@@ -76,4 +76,37 @@ public interface ArquivoDocument {
         @PathVariable Long avaliacaoId,
         @PathVariable Long fotoId
     );
+
+    @Operation(summary = "Upload de fotos para portfolio do profissional")
+    @ApiResponse(responseCode = "201", description = "Fotos enviadas com sucesso")
+    @ApiResponse(responseCode = "400", description = "Limite de fotos excedido ou arquivo invalido")
+    @PostMapping("/perfil/fotos")
+    ResponseEntity<List<ArquivoResponse>> uploadFotosPerfil(
+        @AuthenticationPrincipal Long usuarioId,
+        @Parameter(description = "Fotos (max 10, JPG/PNG/WebP, max 10MB cada)")
+        @RequestParam("fotos") List<MultipartFile> fotos
+    );
+
+    @Operation(summary = "Listar fotos do portfolio do profissional autenticado")
+    @ApiResponse(responseCode = "200", description = "Lista de fotos")
+    @GetMapping("/perfil/fotos")
+    ResponseEntity<List<ArquivoResponse>> listarFotosMeuPerfil(
+        @AuthenticationPrincipal Long usuarioId
+    );
+
+    @Operation(summary = "Listar fotos do portfolio de um profissional (publico)")
+    @ApiResponse(responseCode = "200", description = "Lista de fotos")
+    @GetMapping("/profissionais/{profissionalId}/fotos")
+    ResponseEntity<List<ArquivoResponse>> listarFotosPerfil(
+        @PathVariable Long profissionalId
+    );
+
+    @Operation(summary = "Deletar uma foto do portfolio")
+    @ApiResponse(responseCode = "204", description = "Foto deletada com sucesso")
+    @ApiResponse(responseCode = "404", description = "Foto nao encontrada")
+    @DeleteMapping("/perfil/fotos/{fotoId}")
+    ResponseEntity<Void> deletarFotoPerfil(
+        @AuthenticationPrincipal Long usuarioId,
+        @PathVariable Long fotoId
+    );
 }

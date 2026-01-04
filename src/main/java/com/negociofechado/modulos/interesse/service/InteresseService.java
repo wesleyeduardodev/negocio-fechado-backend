@@ -10,6 +10,8 @@ import com.negociofechado.comum.entity.Endereco;
 import com.negociofechado.modulos.avaliacao.entity.Avaliacao;
 import com.negociofechado.modulos.avaliacao.repository.AvaliacaoRepository;
 import com.negociofechado.modulos.avaliacao.service.AvaliacaoFotoService;
+import com.negociofechado.modulos.avaliacao.service.AvaliacaoService;
+import com.negociofechado.modulos.profissional.service.PerfilFotoService;
 import com.negociofechado.modulos.interesse.entity.Interesse;
 import com.negociofechado.modulos.interesse.entity.StatusInteresse;
 import com.negociofechado.modulos.interesse.repository.InteresseRepository;
@@ -40,6 +42,8 @@ public class InteresseService {
     private final PerfilProfissionalRepository perfilProfissionalRepository;
     private final AvaliacaoRepository avaliacaoRepository;
     private final AvaliacaoFotoService avaliacaoFotoService;
+    private final AvaliacaoService avaliacaoService;
+    private final PerfilFotoService perfilFotoService;
 
     @Transactional
     public InteresseResponse criar(Long usuarioId, CriarInteresseRequest request) {
@@ -214,12 +218,21 @@ public class InteresseService {
         PerfilProfissional perfil = interesse.getProfissional();
         Usuario usuario = perfil.getUsuario();
 
+        // Buscar dados adicionais do profissional
+        int quantidadeFotos = perfilFotoService.contarFotos(perfil.getId());
+        Double mediaAvaliacao = avaliacaoService.calcularMediaPorProfissional(perfil.getId());
+        Long totalAvaliacoes = avaliacaoService.contarPorProfissional(perfil.getId());
+
         return new InteresseResponse(
                 interesse.getId(),
                 perfil.getId(),
                 usuario.getNome(),
                 usuario.getCelular(),
                 perfil.getBio(),
+                usuario.getFotoUrl(),
+                quantidadeFotos,
+                mediaAvaliacao,
+                totalAvaliacoes,
                 interesse.getMensagem(),
                 interesse.getStatus().name(),
                 interesse.getCriadoEm()

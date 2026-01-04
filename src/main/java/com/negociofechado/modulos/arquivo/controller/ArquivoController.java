@@ -4,6 +4,7 @@ import com.negociofechado.comum.exception.NegocioException;
 import com.negociofechado.modulos.arquivo.document.ArquivoDocument;
 import com.negociofechado.modulos.arquivo.dto.ArquivoResponse;
 import com.negociofechado.modulos.avaliacao.service.AvaliacaoFotoService;
+import com.negociofechado.modulos.profissional.service.PerfilFotoService;
 import com.negociofechado.modulos.solicitacao.service.SolicitacaoFotoService;
 import com.negociofechado.modulos.solicitacao.service.SolicitacaoService;
 
@@ -31,6 +32,7 @@ public class ArquivoController implements ArquivoDocument {
     private final SolicitacaoFotoService solicitacaoFotoService;
     private final SolicitacaoService solicitacaoService;
     private final AvaliacaoFotoService avaliacaoFotoService;
+    private final PerfilFotoService perfilFotoService;
 
     @Override
     @PostMapping("/solicitacoes/{solicitacaoId}/fotos")
@@ -110,6 +112,50 @@ public class ArquivoController implements ArquivoDocument {
         }
 
         avaliacaoFotoService.deletarFoto(fotoId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @PostMapping("/perfil/fotos")
+    public ResponseEntity<List<ArquivoResponse>> uploadFotosPerfil(
+            @AuthenticationPrincipal Long usuarioId,
+            @RequestParam("fotos") List<MultipartFile> fotos) {
+
+        Long perfilId = perfilFotoService.getPerfilIdByUsuarioId(usuarioId);
+        List<ArquivoResponse> response = perfilFotoService.uploadFotos(perfilId, fotos);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @Override
+    @GetMapping("/perfil/fotos")
+    public ResponseEntity<List<ArquivoResponse>> listarFotosMeuPerfil(
+            @AuthenticationPrincipal Long usuarioId) {
+
+        Long perfilId = perfilFotoService.getPerfilIdByUsuarioId(usuarioId);
+        List<ArquivoResponse> response = perfilFotoService.listarFotos(perfilId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @GetMapping("/profissionais/{profissionalId}/fotos")
+    public ResponseEntity<List<ArquivoResponse>> listarFotosPerfil(
+            @PathVariable Long profissionalId) {
+
+        List<ArquivoResponse> response = perfilFotoService.listarFotos(profissionalId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @DeleteMapping("/perfil/fotos/{fotoId}")
+    public ResponseEntity<Void> deletarFotoPerfil(
+            @AuthenticationPrincipal Long usuarioId,
+            @PathVariable Long fotoId) {
+
+        perfilFotoService.deletarFoto(fotoId);
 
         return ResponseEntity.noContent().build();
     }
