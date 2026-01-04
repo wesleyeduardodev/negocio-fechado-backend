@@ -1,0 +1,15 @@
+- Quando uma cliente fizer uma solicitação e ele receber os profissionais interessados , seria bom o cliente poder avaliar o perfil de cada profissional, assim como sua reputação, avaliações e etc , o que acha ?
+
+- Criar uma solicitação avulsa que notifica todos os profissionais caso na tenha uma categoria definida
+
+- Procurar uma força de forçar o cliente e fazer a avaliação, se ele tiver avaliação pendende não usar o app ou então dar outro benefício
+
+- O foco do app fazer ser o ranqueamento de profissionais e também divulgar, precisar ter um bom fluxo de notificação. Seria ate bom notificar o profissional tanto pelo app quanto pelo WhatsApp e-mails e tals…
+
+- Reavaliar se de fato seria melhor anexar mídia na solicitação, imagens , vídeo curto ou arquivos como PDF texto e etc…pois acho que isso poderia ajudar bastante antes do profissional demonstrar interesse….
+
+- Sobre as avaliações, acho que seria importante não permitir comentários ofensivos, racistas imorais ou algo nesse sentido…e também inserir anexos nas avaliações para gerar mais confiança….
+
+- E qual a tal ao finalizar a solicitação apagar os anexos da solicitação para economizar espaço ? Bom avaliar ne , aí mantém os anexos apenas nas avaliações
+
+- Wesley Eduardo: Na Bio do profissional colocar uns anexos também…trabalhos que já fez e tals
