@@ -1347,6 +1347,47 @@ volumes:
 
 ---
 
+
+## Testando com o App Mobile (ngrok)
+
+Para testar o app mobile com a API local, é necessário expor a API usando o ngrok.
+
+### 1. Criar conta no ngrok
+
+Acesse [ngrok.com](https://ngrok.com) e crie uma conta gratuita.
+
+### 2. Instalar o ngrok
+
+```bash
+# Windows (com chocolatey)
+choco install ngrok
+
+# Ou baixe diretamente do site
+```
+
+### 3. Autenticar o ngrok
+
+Após criar a conta, copie seu authtoken do dashboard e execute:
+
+```bash
+ngrok config add-authtoken SEU_AUTH_TOKEN
+```
+
+### 4. Expor a API
+
+Com a API rodando na porta 8080:
+
+```bash
+ngrok http 8080
+```
+
+### 5. Copiar a URL
+
+O ngrok irá gerar uma URL pública como:
+```
+https://xxxx-xxx-xxx.ngrok-free.app
+```
+
 ## Licença
 
 Projeto proprietário - Uso não autorizado.
