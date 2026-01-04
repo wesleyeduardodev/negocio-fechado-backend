@@ -106,16 +106,16 @@ Cliente publica       Profissionais         Cliente vê           Negociacao
 │  ┌──────────┐ ┌──────────┐ ┌────────────┐ ┌──────────────┐ │
 │  │   Auth   │ │  Usuario │ │ Solicitacao│ │  Interesse   │ │
 │  └──────────┘ └──────────┘ └────────────┘ └──────────────┘ │
-│  ┌──────────┐ ┌──────────┐ ┌────────────┐                  │
-│  │Avaliacao │ │Categoria │ │Profissional│                  │
-│  └──────────┘ └──────────┘ └────────────┘                  │
+│  ┌──────────┐ ┌──────────┐ ┌────────────┐ ┌──────────────┐ │
+│  │Avaliacao │ │Categoria │ │Profissional│ │   Arquivo    │ │
+│  └──────────┘ └──────────┘ └────────────┘ └──────────────┘ │
 └─────────────────────────────┬───────────────────────────────┘
                               │
               ┌───────────────┼───────────────┐
               ▼               ▼               ▼
        ┌───────────┐   ┌───────────┐   ┌───────────┐
-       │ PostgreSQL│   │  Caffeine │   │  Firebase │
-       │           │   │  (Cache)  │   │   (Push)  │
+       │ PostgreSQL│   │  Caffeine │   │    S3     │
+       │           │   │  (Cache)  │   │ (Storage) │
        └───────────┘   └───────────┘   └───────────┘
 ```
 
@@ -193,45 +193,76 @@ Cliente publica       Profissionais         Cliente vê           Negociacao
 
 ## Telas
 
-### Mapa de Telas (10)
+### Mapa de Telas (12)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                         TELAS MVP 1 (10)                                 │
+│                         TELAS MVP 1 (12)                                 │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │  ONBOARDING (3)                                                         │
 │  ├── 1. Login (celular + senha)                                         │
-│  ├── 2. Cadastro (nome, celular, senha, cidade, bairro)                 │
+│  ├── 2. Cadastro (nome, celular, senha, estado, cidade, bairro)         │
 │  └── 3. Recuperar Senha                                                 │
 │                                                                          │
-│  PRINCIPAL (4)                                                          │
+│  PRINCIPAL (5)                                                          │
 │  ├── 4. Home (categorias + solicitações) - Drawer Menu                  │
-│  ├── 5. Nova Solicitação (descrição + urgência)                         │
-│  ├── 6. Detalhe Solicitação (+ interessados ou botão interesse)         │
-│  └── 7. Perfil do Profissional                                          │
+│  ├── 5. Nova Solicitação (categoria, título, descrição, urgência, fotos)│
+│  ├── 6. Detalhe Solicitação (+ interessados ou botão interesse + fotos) │
+│  ├── 7. Editar Solicitação                                              │
+│  └── 8. Perfil do Profissional                                          │
 │                                                                          │
-│  PROFISSIONAL (1)                                                       │
-│  └── 8. Tornar-se Profissional (categorias + bio)                       │
+│  PROFISSIONAL (2)                                                       │
+│  ├── 9. Tornar-se Profissional (categorias + bio)                       │
+│  └── 10. Meu Perfil Profissional (editar)                               │
 │                                                                          │
 │  COMPARTILHADO (2)                                                      │
-│  ├── 9. Meu Perfil / Configurações                                      │
-│  └── 10. Avaliar Serviço                                                │
+│  ├── 11. Editar Perfil                                                  │
+│  └── 12. Avaliar Serviço                                                │
 │                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Navegação (Drawer Menu)
 
-O app usa navegação por Drawer (menu lateral) ao invés de Bottom Tabs:
+O app usa navegação por Drawer (menu lateral) com toggle de modo (Cliente/Profissional):
+
+```
+┌─────────────────────────────────────────┐
+│  [Avatar]                               │
+│  Nome do Usuário                        │
+│  Celular                                │
+│  📍 Bairro, Cidade                      │
+│                                         │
+│  ─────────────────────────────────────  │
+│  🔘 Modo Cliente / Modo Profissional    │
+│  → Quero ser profissional               │
+│  ─────────────────────────────────────  │
+│                                         │
+│  🏠 Início                              │
+│  📋 Minhas Solicitações                 │
+│  ✏️ Editar Perfil                       │
+│                                         │
+│  ─────── CONFIGURAÇÕES ───────          │
+│  🔔 Notificações                        │
+│  ❓ Ajuda e Suporte                     │
+│  📄 Termos de Uso                       │
+│                                         │
+│  ─────────────────────────────────────  │
+│  🚪 Sair da Conta                       │
+│                                         │
+│  Versão 1.0.0                           │
+└─────────────────────────────────────────┘
+```
 
 | Opção | Cliente | Profissional |
 |-------|---------|--------------|
-| Home | Categorias para solicitar | Solicitações disponíveis + Meus Trabalhos |
+| Início | Categorias + Minhas Solicitações | Stats + Solicitações Disponíveis + Meus Trabalhos |
 | Minhas Solicitações | Lista de solicitações criadas | Lista de solicitações criadas |
-| Meu Perfil Profissional | - | Editar perfil profissional |
-| Editar Dados | Dados pessoais | Dados pessoais |
-| Sair | Logout | Logout |
+| Quero ser profissional | Link para cadastrar | - (já é profissional) |
+| Gerenciar Perfil Prof. | - | Editar perfil profissional |
+| Editar Perfil | Dados pessoais | Dados pessoais |
+| Sair da Conta | Logout | Logout |
 
 ### Home do Profissional
 
@@ -280,7 +311,7 @@ A Home do profissional mostra:
 
 ```
 ┌─────────────────────────────────────────┐
-│  ←        Criar conta                   │
+│  ←        Criar Conta                   │
 │                                         │
 │  Nome completo *                        │
 │  ┌─────────────────────────────────┐   │
@@ -296,25 +327,31 @@ A Home do profissional mostra:
 │  ┌─────────────────────────────────┐   │
 │  │ ••••••••                    👁  │   │
 │  └─────────────────────────────────┘   │
-│  Mínimo 6 caracteres                    │
 │                                         │
 │  Confirmar senha *                      │
 │  ┌─────────────────────────────────┐   │
 │  │ ••••••••                    👁  │   │
 │  └─────────────────────────────────┘   │
 │                                         │
+│  ─────────── Localização ───────────   │
+│                                         │
+│  Estado *                         [▼]  │
+│  ┌─────────────────────────────────┐   │
+│  │ Selecione o estado              │   │
+│  └─────────────────────────────────┘   │
+│                                         │
 │  Cidade *                         [▼]  │
 │  ┌─────────────────────────────────┐   │
-│  │ Santa Luzia                     │   │
+│  │ Selecione a cidade              │   │
 │  └─────────────────────────────────┘   │
 │                                         │
-│  Bairro *                         [▼]  │
+│  Bairro *                               │
 │  ┌─────────────────────────────────┐   │
-│  │ Selecione...                    │   │
+│  │ Digite seu bairro               │   │
 │  └─────────────────────────────────┘   │
 │                                         │
 │  ┌─────────────────────────────────┐   │
-│  │         Criar conta             │   │
+│  │         Criar conta         →   │   │
 │  └─────────────────────────────────┘   │
 │                                         │
 │       Já tem conta? Entrar              │
@@ -382,30 +419,41 @@ A Home do profissional mostra:
 ┌─────────────────────────────────────────┐
 │  ←        Nova Solicitação              │
 │                                         │
-│  Categoria: Pedreiro 🔧                 │
+│  📍 Bairro, Cidade - UF                 │
+│  (localização do usuário logado)        │
 │                                         │
-│  O que você precisa? *                  │
+│  Categoria *                      [▼]  │
 │  ┌─────────────────────────────────┐   │
-│  │ Descreva o serviço que precisa  │   │
-│  │                                 │   │
-│  │                                 │   │
-│  └─────────────────────────────────┘   │
-│  Mínimo 10 caracteres                   │
-│                                         │
-│  Fotos (opcional)                       │
-│  ┌──────┐ ┌──────┐ ┌──────┐           │
-│  │  +   │ │      │ │      │           │
-│  │ Add  │ │      │ │      │           │
-│  └──────┘ └──────┘ └──────┘           │
-│  Até 5 fotos                            │
-│                                         │
-│  Endereço *                             │
-│  ┌─────────────────────────────────┐   │
-│  │ Rua, número, referência...      │   │
+│  │ Selecione a categoria           │   │
 │  └─────────────────────────────────┘   │
 │                                         │
+│  Título *                               │
 │  ┌─────────────────────────────────┐   │
-│  │         Publicar                │   │
+│  │ Ex: Consertar vazamento...      │   │
+│  └─────────────────────────────────┘   │
+│  0/100                                  │
+│                                         │
+│  Descrição *                            │
+│  ┌─────────────────────────────────┐   │
+│  │ Descreva o problema ou serviço  │   │
+│  │ que precisa...                  │   │
+│  │                                 │   │
+│  └─────────────────────────────────┘   │
+│  0/1000                                 │
+│                                         │
+│  Quando precisa? *                [▼]  │
+│  ┌─────────────────────────────────┐   │
+│  │ Selecione o prazo               │   │
+│  └─────────────────────────────────┘   │
+│                                         │
+│  Fotos (0/5)                            │
+│  ┌──────┐                              │
+│  │  +   │  Adicione fotos para ajudar  │
+│  │ Add  │  o profissional a entender   │
+│  └──────┘                              │
+│                                         │
+│  ┌─────────────────────────────────┐   │
+│  │     ✓ Criar Solicitação         │   │
 │  └─────────────────────────────────┘   │
 │                                         │
 └─────────────────────────────────────────┘
@@ -757,10 +805,12 @@ A Home do profissional mostra:
 | id | Long | PK |
 | cliente | Usuario | FK |
 | categoria | Categoria | FK |
+| titulo | String | Título da solicitação (mín 5, máx 100 chars) |
 | descricao | String | Mínimo 10 caracteres |
-| endereco | String | Endereço do serviço |
+| urgencia | Urgencia | Enum |
 | cidade | Cidade | FK |
-| bairro | Bairro | FK (opcional) |
+| bairro | String | Bairro do cliente |
+| uf | String | UF do cliente |
 | status | StatusSolicitacao | Enum |
 | criadoEm | LocalDateTime | Data de criação |
 
@@ -819,9 +869,9 @@ Retorno do endpoint `/api/interesses/stats`:
 
 | Campo | Tipo | Descrição |
 |-------|------|-----------|
-| interessesEnviados | int | Total de interesses demonstrados |
-| contratados | int | Total de vezes contratado |
+| disponiveis | int | Solicitações disponíveis na região/categorias |
 | emNegociacao | int | Interesses pendentes/visualizados |
+| contratados | int | Total de vezes contratado |
 
 ---
 
@@ -914,10 +964,13 @@ Retorno do endpoint `/api/interesses/stats`:
 |--------|----------|-----------|
 | POST | /api/solicitacoes | Criar solicitação |
 | GET | /api/solicitacoes | Minhas solicitações (cliente) |
-| GET | /api/solicitacoes/disponiveis | Solicitações para mim (profissional) |
 | GET | /api/solicitacoes/{id} | Detalhe da solicitação |
-| PATCH | /api/solicitacoes/{id}/cancelar | Cancelar |
+| PUT | /api/solicitacoes/{id} | Atualizar solicitação |
+| DELETE | /api/solicitacoes/{id} | Cancelar solicitação |
 | PATCH | /api/solicitacoes/{id}/concluir | Marcar como concluída |
+| GET | /api/solicitacoes/disponiveis | Solicitações disponíveis (profissional) |
+| GET | /api/solicitacoes/disponiveis/{id} | Detalhe para profissional |
+| GET | /api/solicitacoes/stats | Estatísticas do cliente |
 
 ### Interesses
 
@@ -934,7 +987,15 @@ Retorno do endpoint `/api/interesses/stats`:
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
-| POST | /api/solicitacoes/{id}/avaliacoes | Avaliar serviço |
+| POST | /api/avaliacoes/solicitacao/{id} | Avaliar serviço |
+
+### Arquivos
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | /api/arquivos/solicitacoes/{id}/fotos | Upload de fotos da solicitação (até 5) |
+| GET | /api/arquivos/solicitacoes/{id}/fotos | Listar fotos da solicitação |
+| DELETE | /api/arquivos/solicitacoes/{id}/fotos/{fotoId} | Remover foto |
 
 ---
 
@@ -1241,13 +1302,16 @@ volumes:
 | Backend | Mobile |
 |---------|--------|
 | ✅ POST /api/solicitacoes | ✅ Tela Nova Solicitação |
-| ✅ GET /api/solicitacoes | ✅ Tab Pedidos (minhas solicitações) |
+| ✅ GET /api/solicitacoes | ✅ Lista de solicitações (minhas solicitações) |
 | ✅ GET /api/solicitacoes/{id} | ✅ Tela Detalhe da Solicitação |
+| ✅ PUT /api/solicitacoes/{id} | ✅ Tela Editar Solicitação |
 | ✅ GET /api/solicitacoes/disponiveis | ✅ Home do profissional (solicitações) |
-| ✅ PATCH /api/solicitacoes/{id}/cancelar | ✅ Botão cancelar |
-| ⏳ POST /api/solicitacoes/{id}/imagens | ⏳ Upload de fotos |
+| ✅ DELETE /api/solicitacoes/{id} | ✅ Botão cancelar |
+| ✅ POST /api/arquivos/solicitacoes/{id}/fotos | ✅ Upload de fotos (até 5) |
+| ✅ GET /api/arquivos/solicitacoes/{id}/fotos | ✅ Listar fotos da solicitação |
+| ✅ DELETE /api/arquivos/solicitacoes/{id}/fotos/{fotoId} | ✅ Remover foto |
 
-**Validação:** ✅ Criar solicitação, profissional vê na home
+**Validação:** ✅ Criar solicitação com fotos, editar, profissional vê na home
 
 ---
 
@@ -1334,16 +1398,20 @@ volumes:
 
 ## Categorias Iniciais
 
-| Categoria | Ícone |
-|-----------|-------|
-| Pedreiro | 🔧 |
-| Eletricista | ⚡ |
-| Encanador | 🚿 |
-| Diarista | 🧹 |
-| Pintor | 🎨 |
-| Mecânico | 🔩 |
-| Ar Condicionado | ❄️ |
-| Assistência Técnica | 📱 |
+| Categoria | Ícone (Ionicons) |
+|-----------|------------------|
+| Ar Condicionado | snow |
+| Chaveiro | key |
+| Eletricista | flash |
+| Eletrodomésticos | settings |
+| Encanador | water |
+| Jardineiro | leaf |
+| Limpeza | sparkles |
+| Marceneiro | hammer |
+| Pedreiro | construct |
+| Pintor | color-palette |
+| Pisos e Revestimentos | layers |
+| Serralheiro | cut |
 
 ---
 
