@@ -1,7 +1,9 @@
 package com.negociofechado.modulos.arquivo.controller;
 
+import com.negociofechado.comum.exception.NegocioException;
 import com.negociofechado.modulos.arquivo.document.ArquivoDocument;
 import com.negociofechado.modulos.arquivo.dto.ArquivoResponse;
+import com.negociofechado.modulos.avaliacao.service.AvaliacaoFotoService;
 import com.negociofechado.modulos.solicitacao.service.SolicitacaoFotoService;
 import com.negociofechado.modulos.solicitacao.service.SolicitacaoService;
 
@@ -28,6 +30,7 @@ public class ArquivoController implements ArquivoDocument {
 
     private final SolicitacaoFotoService solicitacaoFotoService;
     private final SolicitacaoService solicitacaoService;
+    private final AvaliacaoFotoService avaliacaoFotoService;
 
     @Override
     @PostMapping("/solicitacoes/{solicitacaoId}/fotos")
@@ -63,6 +66,50 @@ public class ArquivoController implements ArquivoDocument {
         solicitacaoService.verificarProprietario(solicitacaoId, usuarioId);
 
         solicitacaoFotoService.deletarFoto(fotoId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @PostMapping("/avaliacoes/{avaliacaoId}/fotos")
+    public ResponseEntity<List<ArquivoResponse>> uploadFotosAvaliacao(
+            @AuthenticationPrincipal Long usuarioId,
+            @PathVariable Long avaliacaoId,
+            @RequestParam("fotos") List<MultipartFile> fotos) {
+
+        Long clienteId = avaliacaoFotoService.getAvaliacaoClienteId(avaliacaoId);
+        if (!clienteId.equals(usuarioId)) {
+            throw new NegocioException("Voce nao tem permissao para adicionar fotos nesta avaliacao");
+        }
+
+        List<ArquivoResponse> response = avaliacaoFotoService.uploadFotos(avaliacaoId, fotos);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @Override
+    @GetMapping("/avaliacoes/{avaliacaoId}/fotos")
+    public ResponseEntity<List<ArquivoResponse>> listarFotosAvaliacao(
+            @PathVariable Long avaliacaoId) {
+
+        List<ArquivoResponse> response = avaliacaoFotoService.listarFotos(avaliacaoId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @DeleteMapping("/avaliacoes/{avaliacaoId}/fotos/{fotoId}")
+    public ResponseEntity<Void> deletarFotoAvaliacao(
+            @AuthenticationPrincipal Long usuarioId,
+            @PathVariable Long avaliacaoId,
+            @PathVariable Long fotoId) {
+
+        Long clienteId = avaliacaoFotoService.getAvaliacaoClienteId(avaliacaoId);
+        if (!clienteId.equals(usuarioId)) {
+            throw new NegocioException("Voce nao tem permissao para deletar fotos desta avaliacao");
+        }
+
+        avaliacaoFotoService.deletarFoto(fotoId);
 
         return ResponseEntity.noContent().build();
     }

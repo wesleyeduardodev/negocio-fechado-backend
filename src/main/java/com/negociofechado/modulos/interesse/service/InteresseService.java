@@ -9,6 +9,7 @@ import com.negociofechado.modulos.interesse.dto.ProfissionalStatsResponse;
 import com.negociofechado.comum.entity.Endereco;
 import com.negociofechado.modulos.avaliacao.entity.Avaliacao;
 import com.negociofechado.modulos.avaliacao.repository.AvaliacaoRepository;
+import com.negociofechado.modulos.avaliacao.service.AvaliacaoFotoService;
 import com.negociofechado.modulos.interesse.entity.Interesse;
 import com.negociofechado.modulos.interesse.entity.StatusInteresse;
 import com.negociofechado.modulos.interesse.repository.InteresseRepository;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,6 +39,7 @@ public class InteresseService {
     private final SolicitacaoRepository solicitacaoRepository;
     private final PerfilProfissionalRepository perfilProfissionalRepository;
     private final AvaliacaoRepository avaliacaoRepository;
+    private final AvaliacaoFotoService avaliacaoFotoService;
 
     @Transactional
     public InteresseResponse criar(Long usuarioId, CriarInteresseRequest request) {
@@ -173,6 +176,7 @@ public class InteresseService {
         Integer avaliacaoNota = null;
         String avaliacaoComentario = null;
         java.time.LocalDateTime avaliacaoData = null;
+        List<String> avaliacaoFotos = Collections.emptyList();
 
         if (solicitacao.getStatus() == StatusSolicitacao.CONCLUIDA) {
             var avaliacaoOpt = avaliacaoRepository.findBySolicitacaoId(solicitacao.getId());
@@ -181,6 +185,7 @@ public class InteresseService {
                 avaliacaoNota = avaliacao.getNota();
                 avaliacaoComentario = avaliacao.getComentario();
                 avaliacaoData = avaliacao.getCriadoEm();
+                avaliacaoFotos = avaliacaoFotoService.listarUrlsFotos(avaliacao.getId());
             }
         }
 
@@ -200,7 +205,8 @@ public class InteresseService {
                 interesse.getAtualizadoEm(),
                 avaliacaoNota,
                 avaliacaoComentario,
-                avaliacaoData
+                avaliacaoData,
+                avaliacaoFotos
         );
     }
 

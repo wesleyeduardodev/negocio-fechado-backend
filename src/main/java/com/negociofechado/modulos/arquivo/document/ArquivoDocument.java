@@ -48,4 +48,32 @@ public interface ArquivoDocument {
         @PathVariable Long solicitacaoId,
         @PathVariable Long fotoId
     );
+
+    @Operation(summary = "Upload de fotos para avaliacao")
+    @ApiResponse(responseCode = "201", description = "Fotos enviadas com sucesso")
+    @ApiResponse(responseCode = "400", description = "Limite de fotos excedido ou arquivo invalido")
+    @PostMapping("/avaliacoes/{avaliacaoId}/fotos")
+    ResponseEntity<List<ArquivoResponse>> uploadFotosAvaliacao(
+        @AuthenticationPrincipal Long usuarioId,
+        @PathVariable Long avaliacaoId,
+        @Parameter(description = "Fotos (max 5, JPG/PNG/WebP, max 10MB cada)")
+        @RequestParam("fotos") List<MultipartFile> fotos
+    );
+
+    @Operation(summary = "Listar fotos de uma avaliacao")
+    @ApiResponse(responseCode = "200", description = "Lista de fotos")
+    @GetMapping("/avaliacoes/{avaliacaoId}/fotos")
+    ResponseEntity<List<ArquivoResponse>> listarFotosAvaliacao(
+        @PathVariable Long avaliacaoId
+    );
+
+    @Operation(summary = "Deletar uma foto da avaliacao")
+    @ApiResponse(responseCode = "204", description = "Foto deletada com sucesso")
+    @ApiResponse(responseCode = "404", description = "Foto nao encontrada")
+    @DeleteMapping("/avaliacoes/{avaliacaoId}/fotos/{fotoId}")
+    ResponseEntity<Void> deletarFotoAvaliacao(
+        @AuthenticationPrincipal Long usuarioId,
+        @PathVariable Long avaliacaoId,
+        @PathVariable Long fotoId
+    );
 }

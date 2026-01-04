@@ -1,6 +1,7 @@
 package com.negociofechado.modulos.interesse.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record MeuTrabalhoResponse(
     Long interesseId,
@@ -19,5 +20,6 @@ public record MeuTrabalhoResponse(
     // Avaliacao (se concluido)
     Integer avaliacaoNota,
     String avaliacaoComentario,
-    LocalDateTime avaliacaoData
+    LocalDateTime avaliacaoData,
+    List<String> avaliacaoFotos
 ) {}

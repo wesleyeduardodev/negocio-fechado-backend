@@ -22,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collections;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AvaliacaoService {
@@ -30,6 +33,7 @@ public class AvaliacaoService {
     private final SolicitacaoRepository solicitacaoRepository;
     private final InteresseRepository interesseRepository;
     private final UsuarioRepository usuarioRepository;
+    private final AvaliacaoFotoService avaliacaoFotoService;
 
     @Transactional
     public AvaliacaoResponse criar(Long clienteId, Long solicitacaoId, AvaliacaoRequest request) {
@@ -62,13 +66,16 @@ public class AvaliacaoService {
 
         avaliacaoRepository.save(avaliacao);
 
-        return AvaliacaoResponse.fromEntity(avaliacao);
+        return AvaliacaoResponse.fromEntity(avaliacao, Collections.emptyList());
     }
 
     @Transactional(readOnly = true)
     public Page<AvaliacaoResponse> listarPorProfissional(Long profissionalId, Pageable pageable) {
         return avaliacaoRepository.findByProfissionalIdOrderByCriadoEmDesc(profissionalId, pageable)
-                .map(AvaliacaoResponse::fromEntity);
+                .map(avaliacao -> {
+                    List<String> fotos = avaliacaoFotoService.listarUrlsFotos(avaliacao.getId());
+                    return AvaliacaoResponse.fromEntity(avaliacao, fotos);
+                });
     }
 
     @Transactional(readOnly = true)
