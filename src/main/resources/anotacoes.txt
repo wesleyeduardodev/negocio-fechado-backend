@@ -13,3 +13,5 @@
 - E qual a tal ao finalizar a solicitação apagar os anexos da solicitação para economizar espaço ? Bom avaliar ne , aí mantém os anexos apenas nas avaliações
 
 - Wesley Eduardo: Na Bio do profissional colocar uns anexos também…trabalhos que já fez e tals
+
+-Editar dados da solicitacao, ver as fotos e tals..
