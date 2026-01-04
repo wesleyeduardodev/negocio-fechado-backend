@@ -4,7 +4,6 @@ import com.negociofechado.modulos.usuario.document.UsuarioDocument;
 import com.negociofechado.modulos.usuario.dto.AlterarSenhaRequest;
 import com.negociofechado.modulos.usuario.dto.AtualizarModoRequest;
 import com.negociofechado.modulos.usuario.dto.AtualizarUsuarioRequest;
-import com.negociofechado.modulos.usuario.dto.UploadFotoRequest;
 import com.negociofechado.modulos.usuario.dto.UsuarioResponse;
 import com.negociofechado.modulos.usuario.service.UsuarioService;
 
@@ -12,13 +11,16 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 
@@ -59,9 +61,17 @@ public class UsuarioController implements UsuarioDocument {
     @PostMapping("/me/foto")
     public ResponseEntity<UsuarioResponse> atualizarFoto(
             @AuthenticationPrincipal Long usuarioId,
-            @Valid @RequestBody UploadFotoRequest request) {
-        UsuarioResponse response = usuarioService.atualizarFoto(usuarioId, request);
+            @RequestParam("foto") MultipartFile foto) {
+        UsuarioResponse response = usuarioService.atualizarFoto(usuarioId, foto);
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @DeleteMapping("/me/foto")
+    public ResponseEntity<Void> removerFoto(
+            @AuthenticationPrincipal Long usuarioId) {
+        usuarioService.removerFoto(usuarioId);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/me/modo")

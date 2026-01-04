@@ -91,6 +91,15 @@ public class SolicitacaoService {
         return toDetalheResponse(solicitacao);
     }
 
+    public void verificarProprietario(Long solicitacaoId, Long usuarioId) {
+        Solicitacao solicitacao = solicitacaoRepository.findById(solicitacaoId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Solicitação", solicitacaoId));
+
+        if (!solicitacao.getCliente().getId().equals(usuarioId)) {
+            throw new NegocioException("Você não tem permissão para acessar esta solicitação");
+        }
+    }
+
     @Transactional
     public void cancelar(Long clienteId, Long solicitacaoId) {
         Solicitacao solicitacao = solicitacaoRepository.findByIdAndClienteId(solicitacaoId, clienteId)

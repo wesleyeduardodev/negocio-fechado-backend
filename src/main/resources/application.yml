@@ -17,6 +17,11 @@ spring:
   jackson:
     default-property-inclusion: non_null
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
+
 server:
   port: 8090
   servlet:
@@ -33,3 +38,10 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     operations-sorter: method
+
+storage:
+  s3:
+    bucket: ${S3_BUCKET:negocio-fechado-storage}
+    region: ${S3_REGION:us-east-1}
+    access-key: ${AWS_ACCESS_KEY_ID:}
+    secret-key: ${AWS_SECRET_ACCESS_KEY:}

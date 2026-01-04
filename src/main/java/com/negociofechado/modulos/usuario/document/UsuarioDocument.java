@@ -2,7 +2,6 @@ package com.negociofechado.modulos.usuario.document;
 
 import com.negociofechado.modulos.usuario.dto.AlterarSenhaRequest;
 import com.negociofechado.modulos.usuario.dto.AtualizarUsuarioRequest;
-import com.negociofechado.modulos.usuario.dto.UploadFotoRequest;
 import com.negociofechado.modulos.usuario.dto.UsuarioResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Usuários", description = "Endpoints de gerenciamento do usuário logado")
 public interface UsuarioDocument {
@@ -47,11 +47,20 @@ public interface UsuarioDocument {
     @Operation(summary = "Atualizar foto", description = "Atualiza a foto de perfil do usuário")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Foto atualizada"),
-            @ApiResponse(responseCode = "400", description = "URL inválida"),
+            @ApiResponse(responseCode = "400", description = "Arquivo invalido"),
             @ApiResponse(responseCode = "401", description = "Não autenticado")
     })
     ResponseEntity<UsuarioResponse> atualizarFoto(
             @Parameter(hidden = true) Long usuarioId,
-            UploadFotoRequest request);
+            @Parameter(description = "Foto de perfil (JPG/PNG/WebP, max 10MB)")
+            MultipartFile foto);
+
+    @Operation(summary = "Remover foto", description = "Remove a foto de perfil do usuário")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Foto removida"),
+            @ApiResponse(responseCode = "401", description = "Não autenticado")
+    })
+    ResponseEntity<Void> removerFoto(
+            @Parameter(hidden = true) Long usuarioId);
 
 }

@@ -3,9 +3,10 @@ package com.negociofechado.modulos.usuario.service;
 import com.negociofechado.comum.entity.Endereco;
 import com.negociofechado.comum.exception.NegocioException;
 import com.negociofechado.comum.exception.RecursoNaoEncontradoException;
+import com.negociofechado.modulos.arquivo.dto.ArquivoResponse;
+import com.negociofechado.modulos.arquivo.service.ArquivoService;
 import com.negociofechado.modulos.usuario.dto.AlterarSenhaRequest;
 import com.negociofechado.modulos.usuario.dto.AtualizarUsuarioRequest;
-import com.negociofechado.modulos.usuario.dto.UploadFotoRequest;
 import com.negociofechado.modulos.usuario.dto.UsuarioResponse;
 import com.negociofechado.modulos.usuario.entity.Usuario;
 import com.negociofechado.modulos.usuario.repository.UsuarioRepository;
@@ -13,6 +14,7 @@ import com.negociofechado.modulos.usuario.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +24,7 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ArquivoService arquivoService;
 
     @Transactional(readOnly = true)
     public UsuarioResponse buscarPorId(Long id) {
@@ -63,13 +66,26 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioResponse atualizarFoto(Long id, UploadFotoRequest request) {
+    public UsuarioResponse atualizarFoto(Long id, MultipartFile foto) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", id));
 
-        usuario.setFotoUrl(request.fotoUrl());
+        ArquivoResponse arquivoResponse = arquivoService.uploadAvatar(id, foto);
+
+        usuario.setFotoUrl(arquivoResponse.url());
         usuarioRepository.save(usuario);
         return toResponse(usuario);
+    }
+
+    @Transactional
+    public void removerFoto(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", id));
+
+        arquivoService.deletarAvatar(id);
+
+        usuario.setFotoUrl(null);
+        usuarioRepository.save(usuario);
     }
 
     @Transactional
