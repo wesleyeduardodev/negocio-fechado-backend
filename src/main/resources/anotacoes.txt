@@ -22,3 +22,9 @@
 
 - Agora temos que fazer o seguinte, anexar fotos na bio do profissional. Quando um cliente fizer uma solicitação e receber o interesse do profissional por exemplo, o cliente pode entrar no perfil dele para ver as tanto as ultimas avaliações e seus anexos quanto os dados da bio e os anexos,
 acredito que dessa forma sera melhor para o cliente decidir qual profisisional contratar, o que acha dessa abordagem? faça uma analise...pois voce é especialista em mercado, produto e experiencia do usuario.
+
+- Criar Lista de top profissionais por categorias e etc
+
+- Criar fluxo livre de solicitação caso nao se encaixe em nenhuma categoria, avaliar bem, nesse caso teria que notificar tudo os profissionais.
+
+- E se nao tiver nennhum interressado na cidade? e talvez so tenha na cidade visinha? INdicar para o cliente expandir a area de interessados?

@@ -3,8 +3,12 @@ package com.negociofechado.modulos.solicitacao.service;
 import com.negociofechado.comum.entity.Endereco;
 import com.negociofechado.comum.exception.NegocioException;
 import com.negociofechado.comum.exception.RecursoNaoEncontradoException;
+import com.negociofechado.modulos.avaliacao.entity.Avaliacao;
+import com.negociofechado.modulos.avaliacao.repository.AvaliacaoRepository;
+import com.negociofechado.modulos.avaliacao.service.AvaliacaoFotoService;
 import com.negociofechado.modulos.categoria.entity.Categoria;
 import com.negociofechado.modulos.categoria.repository.CategoriaRepository;
+import com.negociofechado.modulos.interesse.entity.Interesse;
 import com.negociofechado.modulos.interesse.repository.InteresseRepository;
 import com.negociofechado.modulos.profissional.entity.PerfilProfissional;
 import com.negociofechado.modulos.profissional.repository.PerfilProfissionalRepository;
@@ -30,8 +34,10 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -46,6 +52,8 @@ public class SolicitacaoService {
     private final CategoriaRepository categoriaRepository;
     private final PerfilProfissionalRepository perfilProfissionalRepository;
     private final InteresseRepository interesseRepository;
+    private final AvaliacaoRepository avaliacaoRepository;
+    private final AvaliacaoFotoService avaliacaoFotoService;
 
     @Transactional
     public SolicitacaoDetalheResponse criar(Long clienteId, CriarSolicitacaoRequest request) {
@@ -295,6 +303,36 @@ public class SolicitacaoService {
                 .map(SolicitacaoFoto::getUrl)
                 .toList();
 
+        // Buscar profissional contratado (se houver)
+        Long profissionalContratadoId = null;
+        String profissionalContratadoNome = null;
+        String profissionalContratadoFotoUrl = null;
+
+        Optional<Interesse> interesseContratado = interesseRepository.findContratadoBySolicitacaoId(solicitacao.getId());
+        if (interesseContratado.isPresent()) {
+            PerfilProfissional profissional = interesseContratado.get().getProfissional();
+            profissionalContratadoId = profissional.getId();
+            profissionalContratadoNome = profissional.getUsuario().getNome();
+            profissionalContratadoFotoUrl = profissional.getUsuario().getFotoUrl();
+        }
+
+        // Buscar avaliação (se houver)
+        Long avaliacaoId = null;
+        Integer avaliacaoNota = null;
+        String avaliacaoComentario = null;
+        List<String> avaliacaoFotos = Collections.emptyList();
+        LocalDateTime avaliacaoData = null;
+
+        Optional<Avaliacao> avaliacao = avaliacaoRepository.findBySolicitacaoId(solicitacao.getId());
+        if (avaliacao.isPresent()) {
+            Avaliacao av = avaliacao.get();
+            avaliacaoId = av.getId();
+            avaliacaoNota = av.getNota();
+            avaliacaoComentario = av.getComentario();
+            avaliacaoData = av.getCriadoEm();
+            avaliacaoFotos = avaliacaoFotoService.listarUrlsFotos(av.getId());
+        }
+
         return new SolicitacaoDetalheResponse(
                 solicitacao.getId(),
                 solicitacao.getTitulo(),
@@ -311,7 +349,15 @@ public class SolicitacaoService {
                 fotosUrls,
                 interesseRepository.countBySolicitacaoId(solicitacao.getId()),
                 solicitacao.getCriadoEm(),
-                solicitacao.getAtualizadoEm()
+                solicitacao.getAtualizadoEm(),
+                profissionalContratadoId,
+                profissionalContratadoNome,
+                profissionalContratadoFotoUrl,
+                avaliacaoId,
+                avaliacaoNota,
+                avaliacaoComentario,
+                avaliacaoFotos,
+                avaliacaoData
         );
     }
 

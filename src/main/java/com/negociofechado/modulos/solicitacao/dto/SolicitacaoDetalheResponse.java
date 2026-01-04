@@ -19,5 +19,15 @@ public record SolicitacaoDetalheResponse(
         List<String> fotos,
         int totalInteresses,
         LocalDateTime criadoEm,
-        LocalDateTime atualizadoEm
+        LocalDateTime atualizadoEm,
+        // Profissional contratado (quando EM_ANDAMENTO ou CONCLUIDA)
+        Long profissionalContratadoId,
+        String profissionalContratadoNome,
+        String profissionalContratadoFotoUrl,
+        // Avaliação (quando existe)
+        Long avaliacaoId,
+        Integer avaliacaoNota,
+        String avaliacaoComentario,
+        List<String> avaliacaoFotos,
+        LocalDateTime avaliacaoData
 ) {}
