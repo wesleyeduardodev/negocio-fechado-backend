@@ -195,6 +195,28 @@ public class SolicitacaoService {
         solicitacao.setStatus(StatusSolicitacao.CONCLUIDA);
         solicitacao.setAtualizadoEm(LocalDateTime.now());
         solicitacaoRepository.save(solicitacao);
+
+        notificarProfissionalServicoConcluido(solicitacao);
+    }
+
+    private void notificarProfissionalServicoConcluido(Solicitacao solicitacao) {
+        Optional<Interesse> interesseContratado = interesseRepository.findContratadoBySolicitacaoId(solicitacao.getId());
+
+        if (interesseContratado.isPresent()) {
+            Long profissionalUsuarioId = interesseContratado.get().getProfissional().getUsuario().getId();
+            String clienteNome = solicitacao.getCliente().getNome();
+
+            String titulo = "Servico concluido";
+            String corpo = clienteNome + " marcou o servico como concluido: " + solicitacao.getTitulo();
+
+            notificacaoService.enviarParaUsuario(
+                profissionalUsuarioId,
+                TipoNotificacao.SERVICO_CONCLUIDO,
+                titulo,
+                corpo,
+                solicitacao.getId()
+            );
+        }
     }
 
     @Transactional(readOnly = true)

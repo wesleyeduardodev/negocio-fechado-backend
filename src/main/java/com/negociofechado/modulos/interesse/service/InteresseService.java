@@ -156,6 +156,25 @@ public class InteresseService {
             solicitacao.setStatus(StatusSolicitacao.EM_ANDAMENTO);
             solicitacaoRepository.save(solicitacao);
         }
+
+        notificarProfissionalContratado(interesse);
+    }
+
+    private void notificarProfissionalContratado(Interesse interesse) {
+        Long profissionalUsuarioId = interesse.getProfissional().getUsuario().getId();
+        Solicitacao solicitacao = interesse.getSolicitacao();
+        String clienteNome = solicitacao.getCliente().getNome();
+
+        String titulo = "Voce foi contratado!";
+        String corpo = clienteNome + " contratou voce para: " + solicitacao.getTitulo();
+
+        notificacaoService.enviarParaUsuario(
+            profissionalUsuarioId,
+            TipoNotificacao.INTERESSE_ACEITO,
+            titulo,
+            corpo,
+            solicitacao.getId()
+        );
     }
 
     public int contarPorSolicitacao(Long solicitacaoId) {
