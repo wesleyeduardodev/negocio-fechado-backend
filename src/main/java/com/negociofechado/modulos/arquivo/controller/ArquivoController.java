@@ -1,13 +1,10 @@
 package com.negociofechado.modulos.arquivo.controller;
-
 import com.negociofechado.comum.exception.NegocioException;
-import com.negociofechado.modulos.arquivo.document.ArquivoDocument;
 import com.negociofechado.modulos.arquivo.dto.ArquivoResponse;
 import com.negociofechado.modulos.avaliacao.service.AvaliacaoFotoService;
 import com.negociofechado.modulos.profissional.service.PerfilFotoService;
 import com.negociofechado.modulos.solicitacao.service.SolicitacaoFotoService;
 import com.negociofechado.modulos.solicitacao.service.SolicitacaoService;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 
 @RestController

@@ -1,4 +1,4 @@
-package com.negociofechado.modulos.usuario.document;
+package com.negociofechado.modulos.usuario.controller;
 
 import com.negociofechado.modulos.usuario.dto.AlterarSenhaRequest;
 import com.negociofechado.modulos.usuario.dto.AtualizarUsuarioRequest;

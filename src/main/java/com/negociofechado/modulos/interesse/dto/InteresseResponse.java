@@ -1,5 +1,4 @@
 package com.negociofechado.modulos.interesse.dto;
-
 import java.time.LocalDateTime;
 
 public record InteresseResponse(

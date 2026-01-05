@@ -1,8 +1,6 @@
 package com.negociofechado.comum.entity;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,5 +26,4 @@ public class Endereco {
 
     @Column(name = "bairro", nullable = false)
     private String bairro;
-
 }

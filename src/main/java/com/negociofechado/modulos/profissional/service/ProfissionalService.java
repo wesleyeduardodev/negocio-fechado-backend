@@ -1,5 +1,4 @@
 package com.negociofechado.modulos.profissional.service;
-
 import com.negociofechado.comum.entity.Endereco;
 import com.negociofechado.comum.exception.NegocioException;
 import com.negociofechado.comum.exception.RecursoNaoEncontradoException;
@@ -14,12 +13,9 @@ import com.negociofechado.modulos.profissional.entity.PerfilProfissional;
 import com.negociofechado.modulos.profissional.repository.PerfilProfissionalRepository;
 import com.negociofechado.modulos.usuario.entity.Usuario;
 import com.negociofechado.modulos.usuario.repository.UsuarioRepository;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -137,5 +133,4 @@ public class ProfissionalService {
                 perfil.getCriadoEm()
         );
     }
-
 }

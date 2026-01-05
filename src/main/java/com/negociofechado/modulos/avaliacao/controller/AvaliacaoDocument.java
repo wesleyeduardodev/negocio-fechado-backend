@@ -1,14 +1,11 @@
-package com.negociofechado.modulos.avaliacao.document;
-
+package com.negociofechado.modulos.avaliacao.controller;
 import com.negociofechado.modulos.avaliacao.dto.AvaliacaoRequest;
 import com.negociofechado.modulos.avaliacao.dto.AvaliacaoResponse;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -36,5 +33,4 @@ public interface AvaliacaoDocument {
     ResponseEntity<Page<AvaliacaoResponse>> listarPorProfissional(
             Long profissionalId,
             Pageable pageable);
-
 }

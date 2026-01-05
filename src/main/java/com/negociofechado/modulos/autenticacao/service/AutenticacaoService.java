@@ -1,5 +1,4 @@
 package com.negociofechado.modulos.autenticacao.service;
-
 import com.negociofechado.comum.entity.Endereco;
 import com.negociofechado.comum.exception.NegocioException;
 import com.negociofechado.comum.exception.RecursoNaoEncontradoException;
@@ -12,11 +11,9 @@ import com.negociofechado.modulos.autenticacao.dto.UsuarioAuthResponse;
 import com.negociofechado.modulos.localizacao.service.LocalizacaoService;
 import com.negociofechado.modulos.usuario.entity.Usuario;
 import com.negociofechado.modulos.usuario.repository.UsuarioRepository;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -106,5 +103,4 @@ public class AutenticacaoService {
 
         return new AuthResponse(token, refreshToken, usuarioResponse);
     }
-
 }

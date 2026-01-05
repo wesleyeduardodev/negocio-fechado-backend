@@ -1,16 +1,11 @@
 package com.negociofechado.modulos.interesse.repository;
-
 import com.negociofechado.modulos.interesse.entity.Interesse;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import com.negociofechado.modulos.interesse.entity.StatusInteresse;
-
 import java.util.List;
 import java.util.Optional;
 

@@ -1,13 +1,9 @@
 package com.negociofechado.modulos.profissional.controller;
-
-import com.negociofechado.modulos.profissional.document.ProfissionalDocument;
 import com.negociofechado.modulos.profissional.dto.AtualizarPerfilProfissionalRequest;
 import com.negociofechado.modulos.profissional.dto.CriarPerfilProfissionalRequest;
 import com.negociofechado.modulos.profissional.dto.PerfilProfissionalResponse;
 import com.negociofechado.modulos.profissional.service.ProfissionalService;
-
 import jakarta.validation.Valid;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -67,5 +63,4 @@ public class ProfissionalController implements ProfissionalDocument {
         boolean isProfissional = profissionalService.isProfissional(usuarioId);
         return ResponseEntity.ok(isProfissional);
     }
-
 }

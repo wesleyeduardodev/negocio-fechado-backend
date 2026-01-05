@@ -1,4 +1,4 @@
-package com.negociofechado.modulos.solicitacao.document;
+package com.negociofechado.modulos.solicitacao.controller;
 
 import com.negociofechado.modulos.solicitacao.dto.CriarSolicitacaoRequest;
 import com.negociofechado.modulos.solicitacao.dto.SolicitacaoDetalheResponse;

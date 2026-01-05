@@ -1,10 +1,7 @@
 package com.negociofechado.modulos.localizacao.client;
-
 import java.util.Arrays;
 import java.util.List;
-
 import com.negociofechado.modulos.localizacao.dto.CidadeResponse;
-
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -71,5 +68,4 @@ public class IbgeClient {
     public record IbgeMesorregiao(IbgeUF UF) {}
 
     public record IbgeUF(Integer id, String sigla, String nome) {}
-
 }

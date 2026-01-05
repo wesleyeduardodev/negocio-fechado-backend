@@ -1,8 +1,6 @@
 package com.negociofechado.modulos.profissional.entity;
-
 import com.negociofechado.modulos.categoria.entity.Categoria;
 import com.negociofechado.modulos.usuario.entity.Usuario;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,13 +13,11 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -70,5 +66,4 @@ public class PerfilProfissional {
         criadoEm = LocalDateTime.now();
         atualizadoEm = LocalDateTime.now();
     }
-
 }

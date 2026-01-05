@@ -1,12 +1,8 @@
 package com.negociofechado.modulos.avaliacao.controller;
-
-import com.negociofechado.modulos.avaliacao.document.AvaliacaoDocument;
 import com.negociofechado.modulos.avaliacao.dto.AvaliacaoRequest;
 import com.negociofechado.modulos.avaliacao.dto.AvaliacaoResponse;
 import com.negociofechado.modulos.avaliacao.service.AvaliacaoService;
-
 import jakarta.validation.Valid;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -43,9 +39,8 @@ public class AvaliacaoController implements AvaliacaoDocument {
     @GetMapping("/profissional/{profissionalId}")
     public ResponseEntity<Page<AvaliacaoResponse>> listarPorProfissional(
             @PathVariable Long profissionalId,
-            @PageableDefault(size = 10) Pageable pageable) {
+            @PageableDefault() Pageable pageable) {
         Page<AvaliacaoResponse> response = avaliacaoService.listarPorProfissional(profissionalId, pageable);
         return ResponseEntity.ok(response);
     }
-
 }

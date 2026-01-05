@@ -1,17 +1,13 @@
 package com.negociofechado.modulos.arquivo.service;
-
 import com.negociofechado.comum.exception.NegocioException;
 import com.negociofechado.modulos.arquivo.dto.ProcessedImage;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
-
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -25,9 +21,7 @@ public class ImagemService {
     private static final long MAX_SIZE_BYTES = 10 * 1024 * 1024;
     private static final int MAX_DIMENSION = 1920;
     private static final float JPEG_QUALITY = 0.85f;
-    private static final Set<String> ALLOWED_TYPES = Set.of(
-        "image/jpeg", "image/jpg", "image/png", "image/webp"
-    );
+    private static final Set<String> ALLOWED_TYPES = Set.of("image/jpeg", "image/jpg", "image/png", "image/webp");
 
     public void validar(MultipartFile file) {
         if (file.isEmpty()) {
@@ -73,11 +67,11 @@ public class ImagemService {
             writer.dispose();
 
             return new ProcessedImage(
-                baos.toByteArray(),
-                "image/jpeg",
-                "jpg",
-                resized.getWidth(),
-                resized.getHeight()
+                    baos.toByteArray(),
+                    "image/jpeg",
+                    "jpg",
+                    resized.getWidth(),
+                    resized.getHeight()
             );
         } catch (IOException e) {
             throw new NegocioException("Erro ao processar imagem");
@@ -100,8 +94,8 @@ public class ImagemService {
         }
 
         double ratio = Math.min(
-            (double) MAX_DIMENSION / width,
-            (double) MAX_DIMENSION / height
+                (double) MAX_DIMENSION / width,
+                (double) MAX_DIMENSION / height
         );
 
         int newWidth = (int) (width * ratio);

@@ -1,6 +1,5 @@
 package com.negociofechado.modulos.autenticacao.controller;
 
-import com.negociofechado.modulos.autenticacao.document.AutenticacaoDocument;
 import com.negociofechado.modulos.autenticacao.dto.AuthResponse;
 import com.negociofechado.modulos.autenticacao.dto.LoginRequest;
 import com.negociofechado.modulos.autenticacao.dto.RefreshRequest;

@@ -1,6 +1,5 @@
 package com.negociofechado.modulos.usuario.controller;
 
-import com.negociofechado.modulos.usuario.document.UsuarioDocument;
 import com.negociofechado.modulos.usuario.dto.AlterarSenhaRequest;
 import com.negociofechado.modulos.usuario.dto.AtualizarModoRequest;
 import com.negociofechado.modulos.usuario.dto.AtualizarUsuarioRequest;

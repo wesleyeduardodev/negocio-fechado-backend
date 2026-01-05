@@ -1,10 +1,7 @@
 package com.negociofechado.modulos.avaliacao.repository;
-
 import com.negociofechado.modulos.avaliacao.entity.AvaliacaoFoto;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository

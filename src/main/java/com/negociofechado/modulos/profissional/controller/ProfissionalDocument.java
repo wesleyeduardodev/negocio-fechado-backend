@@ -1,9 +1,7 @@
-package com.negociofechado.modulos.profissional.document;
-
+package com.negociofechado.modulos.profissional.controller;
 import com.negociofechado.modulos.profissional.dto.AtualizarPerfilProfissionalRequest;
 import com.negociofechado.modulos.profissional.dto.CriarPerfilProfissionalRequest;
 import com.negociofechado.modulos.profissional.dto.PerfilProfissionalResponse;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -51,5 +49,4 @@ public interface ProfissionalDocument {
             @ApiResponse(responseCode = "401", description = "Não autenticado")
     })
     ResponseEntity<Boolean> isProfissional(Long usuarioId);
-
 }

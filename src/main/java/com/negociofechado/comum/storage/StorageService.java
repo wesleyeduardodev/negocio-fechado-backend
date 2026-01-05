@@ -1,8 +1,6 @@
 package com.negociofechado.comum.storage;
-
 import com.negociofechado.comum.storage.dto.UploadRequest;
 import com.negociofechado.comum.storage.dto.UploadResult;
-
 import java.time.Duration;
 import java.util.List;
 

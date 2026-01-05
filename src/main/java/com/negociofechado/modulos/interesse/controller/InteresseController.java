@@ -1,13 +1,10 @@
 package com.negociofechado.modulos.interesse.controller;
-
 import com.negociofechado.modulos.interesse.dto.CriarInteresseRequest;
 import com.negociofechado.modulos.interesse.dto.InteresseResponse;
 import com.negociofechado.modulos.interesse.dto.MeuTrabalhoResponse;
 import com.negociofechado.modulos.interesse.dto.ProfissionalStatsResponse;
 import com.negociofechado.modulos.interesse.service.InteresseService;
-
 import jakarta.validation.Valid;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,9 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 
 @RestController

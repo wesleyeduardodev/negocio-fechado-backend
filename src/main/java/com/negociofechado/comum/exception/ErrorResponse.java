@@ -1,5 +1,4 @@
 package com.negociofechado.comum.exception;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,5 +16,4 @@ public record ErrorResponse(
     public ErrorResponse(int status, String message, List<String> errors) {
         this(status, message, LocalDateTime.now(), errors);
     }
-
 }

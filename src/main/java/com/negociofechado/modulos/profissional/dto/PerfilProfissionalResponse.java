@@ -1,5 +1,4 @@
 package com.negociofechado.modulos.profissional.dto;
-
 import java.time.LocalDateTime;
 import java.util.List;
 

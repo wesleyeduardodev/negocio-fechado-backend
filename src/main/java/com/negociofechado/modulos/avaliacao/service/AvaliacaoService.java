@@ -1,5 +1,4 @@
 package com.negociofechado.modulos.avaliacao.service;
-
 import com.negociofechado.comum.exception.NegocioException;
 import com.negociofechado.comum.exception.RecursoNaoEncontradoException;
 import com.negociofechado.modulos.avaliacao.dto.AvaliacaoRequest;
@@ -14,14 +13,11 @@ import com.negociofechado.modulos.solicitacao.entity.StatusSolicitacao;
 import com.negociofechado.modulos.solicitacao.repository.SolicitacaoRepository;
 import com.negociofechado.modulos.usuario.entity.Usuario;
 import com.negociofechado.modulos.usuario.repository.UsuarioRepository;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import lombok.RequiredArgsConstructor;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -88,5 +84,4 @@ public class AvaliacaoService {
     public Long contarPorProfissional(Long profissionalId) {
         return avaliacaoRepository.contarPorProfissional(profissionalId);
     }
-
 }

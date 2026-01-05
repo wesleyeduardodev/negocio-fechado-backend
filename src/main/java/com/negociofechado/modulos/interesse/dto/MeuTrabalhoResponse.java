@@ -1,5 +1,4 @@
 package com.negociofechado.modulos.interesse.dto;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,7 +16,6 @@ public record MeuTrabalhoResponse(
     String clienteCidade,
     String clienteUf,
     LocalDateTime contratadoEm,
-    // Avaliacao (se concluido)
     Integer avaliacaoNota,
     String avaliacaoComentario,
     LocalDateTime avaliacaoData,

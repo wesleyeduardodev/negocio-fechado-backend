@@ -1,14 +1,10 @@
 package com.negociofechado.modulos.categoria.service;
-
 import com.negociofechado.modulos.categoria.dto.CategoriaResponse;
 import com.negociofechado.modulos.categoria.entity.Categoria;
 import com.negociofechado.modulos.categoria.repository.CategoriaRepository;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 
 @Service
@@ -32,5 +28,4 @@ public class CategoriaService {
                 categoria.getIcone()
         );
     }
-
 }

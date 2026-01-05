@@ -1,4 +1,4 @@
-package com.negociofechado.modulos.autenticacao.document;
+package com.negociofechado.modulos.autenticacao.controller;
 
 import com.negociofechado.modulos.autenticacao.dto.AuthResponse;
 import com.negociofechado.modulos.autenticacao.dto.LoginRequest;

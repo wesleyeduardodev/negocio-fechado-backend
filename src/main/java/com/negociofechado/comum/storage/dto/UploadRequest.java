@@ -1,5 +1,4 @@
 package com.negociofechado.comum.storage.dto;
-
 import java.util.Map;
 
 public record UploadRequest(

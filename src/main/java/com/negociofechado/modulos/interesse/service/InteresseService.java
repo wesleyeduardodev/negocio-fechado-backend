@@ -1,5 +1,4 @@
 package com.negociofechado.modulos.interesse.service;
-
 import com.negociofechado.comum.exception.NegocioException;
 import com.negociofechado.comum.exception.RecursoNaoEncontradoException;
 import com.negociofechado.modulos.interesse.dto.CriarInteresseRequest;
@@ -22,12 +21,9 @@ import com.negociofechado.modulos.solicitacao.entity.StatusSolicitacao;
 import com.negociofechado.modulos.solicitacao.repository.SolicitacaoRepository;
 import com.negociofechado.modulos.categoria.entity.Categoria;
 import com.negociofechado.modulos.usuario.entity.Usuario;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import lombok.RequiredArgsConstructor;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -61,13 +57,11 @@ public class InteresseService {
             throw new NegocioException("Esta solicitacao nao esta mais disponivel");
         }
 
-        // Verifica se a solicitacao e da mesma cidade do profissional
         Usuario profissionalUsuario = perfil.getUsuario();
         if (!solicitacao.getEndereco().getCidadeIbgeId().equals(profissionalUsuario.getEndereco().getCidadeIbgeId())) {
             throw new NegocioException("Esta solicitacao nao esta disponivel para sua regiao");
         }
 
-        // Verifica se a categoria esta nas categorias do profissional
         Set<Long> categoriasIds = perfil.getCategorias().stream()
                 .map(Categoria::getId)
                 .collect(Collectors.toSet());
@@ -76,12 +70,10 @@ public class InteresseService {
             throw new NegocioException("Esta solicitacao nao esta disponivel para sua categoria");
         }
 
-        // Verifica se nao e uma solicitacao propria
         if (solicitacao.getCliente().getId().equals(usuarioId)) {
             throw new NegocioException("Voce nao pode demonstrar interesse na sua propria solicitacao");
         }
 
-        // Verifica se ja demonstrou interesse
         if (interesseRepository.existsBySolicitacaoIdAndProfissionalId(request.solicitacaoId(), perfil.getId())) {
             throw new NegocioException("Voce ja demonstrou interesse nesta solicitacao");
         }
@@ -102,7 +94,6 @@ public class InteresseService {
     public List<InteresseResponse> listarPorSolicitacao(Long clienteId, Long solicitacaoId) {
         Solicitacao solicitacao = solicitacaoRepository.findByIdAndClienteId(solicitacaoId, clienteId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Solicitacao", solicitacaoId));
-
         return interesseRepository.findBySolicitacaoIdWithProfissional(solicitacaoId)
                 .stream()
                 .map(this::toResponse)
@@ -136,7 +127,6 @@ public class InteresseService {
         interesse.setStatus(StatusInteresse.CONTRATADO);
         interesseRepository.save(interesse);
 
-        // Atualiza o status da solicitacao para EM_ANDAMENTO
         Solicitacao solicitacao = interesse.getSolicitacao();
         if (solicitacao.getStatus() == StatusSolicitacao.ABERTA) {
             solicitacao.setStatus(StatusSolicitacao.EM_ANDAMENTO);
@@ -176,7 +166,6 @@ public class InteresseService {
         Usuario cliente = solicitacao.getCliente();
         Endereco endereco = solicitacao.getEndereco();
 
-        // Buscar avaliacao se o trabalho foi concluido
         Integer avaliacaoNota = null;
         String avaliacaoComentario = null;
         java.time.LocalDateTime avaliacaoData = null;
@@ -217,12 +206,9 @@ public class InteresseService {
     private InteresseResponse toResponse(Interesse interesse) {
         PerfilProfissional perfil = interesse.getProfissional();
         Usuario usuario = perfil.getUsuario();
-
-        // Buscar dados adicionais do profissional
         int quantidadeFotos = perfilFotoService.contarFotos(perfil.getId());
         Double mediaAvaliacao = avaliacaoService.calcularMediaPorProfissional(perfil.getId());
         Long totalAvaliacoes = avaliacaoService.contarPorProfissional(perfil.getId());
-
         return new InteresseResponse(
                 interesse.getId(),
                 perfil.getId(),
