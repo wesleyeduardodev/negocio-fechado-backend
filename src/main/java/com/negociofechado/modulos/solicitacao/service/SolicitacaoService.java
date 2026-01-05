@@ -10,6 +10,8 @@ import com.negociofechado.modulos.categoria.entity.Categoria;
 import com.negociofechado.modulos.categoria.repository.CategoriaRepository;
 import com.negociofechado.modulos.interesse.entity.Interesse;
 import com.negociofechado.modulos.interesse.repository.InteresseRepository;
+import com.negociofechado.modulos.notificacao.entity.TipoNotificacao;
+import com.negociofechado.modulos.notificacao.service.NotificacaoService;
 import com.negociofechado.modulos.profissional.entity.PerfilProfissional;
 import com.negociofechado.modulos.profissional.repository.PerfilProfissionalRepository;
 import com.negociofechado.modulos.solicitacao.dto.AtualizarSolicitacaoRequest;
@@ -54,6 +56,7 @@ public class SolicitacaoService {
     private final InteresseRepository interesseRepository;
     private final AvaliacaoRepository avaliacaoRepository;
     private final AvaliacaoFotoService avaliacaoFotoService;
+    private final NotificacaoService notificacaoService;
 
     @Transactional
     public SolicitacaoDetalheResponse criar(Long clienteId, CriarSolicitacaoRequest request) {
@@ -86,7 +89,32 @@ public class SolicitacaoService {
                 .build();
 
         solicitacaoRepository.save(solicitacao);
+
+        notificarProfissionais(solicitacao);
+
         return toDetalheResponse(solicitacao);
+    }
+
+    private void notificarProfissionais(Solicitacao solicitacao) {
+        Integer cidadeIbgeId = solicitacao.getEndereco().getCidadeIbgeId();
+        Long categoriaId = solicitacao.getCategoria().getId();
+        Long clienteId = solicitacao.getCliente().getId();
+
+        List<Long> profissionaisIds = perfilProfissionalRepository
+            .findUsuarioIdsByCidadeAndCategoriaAndAtivoExcluindoUsuario(cidadeIbgeId, categoriaId, clienteId);
+
+        if (!profissionaisIds.isEmpty()) {
+            String titulo = "Nova solicitacao disponivel";
+            String corpo = solicitacao.getTitulo() + " - " + solicitacao.getEndereco().getBairro();
+
+            notificacaoService.enviarParaUsuarios(
+                profissionaisIds,
+                TipoNotificacao.NOVA_SOLICITACAO,
+                titulo,
+                corpo,
+                solicitacao.getId()
+            );
+        }
     }
 
     @Transactional(readOnly = true)

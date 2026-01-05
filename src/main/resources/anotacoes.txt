@@ -1,30 +1,17 @@
-- Quando uma cliente fizer uma solicitação e ele receber os profissionais interessados , seria bom o cliente poder avaliar o perfil de cada profissional, assim como sua reputação, avaliações e etc , o que acha ?
-
-- Criar uma solicitação avulsa que notifica todos os profissionais caso na tenha uma categoria definida
-
-- Procurar uma força de forçar o cliente e fazer a avaliação, se ele tiver avaliação pendende não usar o app ou então dar outro benefício
-
 - O foco do app fazer ser o ranqueamento de profissionais e também divulgar, precisar ter um bom fluxo de notificação. Seria ate bom notificar o profissional tanto pelo app quanto pelo WhatsApp e-mails e tals…
 
-- Reavaliar se de fato seria melhor anexar mídia na solicitação, imagens , vídeo curto ou arquivos como PDF texto e etc…pois acho que isso poderia ajudar bastante antes do profissional demonstrar interesse….
+- Ao clicar em uma categoria, ver os tops profissionais dessa categoria.
 
 - Sobre as avaliações, acho que seria importante não permitir comentários ofensivos, racistas imorais ou algo nesse sentido…e também inserir anexos nas avaliações para gerar mais confiança….
 
 - E qual a tal ao finalizar a solicitação apagar os anexos da solicitação para economizar espaço ? Bom avaliar ne , aí mantém os anexos apenas nas avaliações
 
-- Wesley Eduardo: Na Bio do profissional colocar uns anexos também…trabalhos que já fez e tals
-
--Editar dados da solicitacao, ver as fotos e tals..
-
 - Avaliar se faz sentido depois do negocio ter sido fechado e tals..apagar as fotos depois de fechado ou depois de um tempo para economizar espaço..avaliar bem isso...
-
-- Ao anexar fotos, informar que se quiser mandar mais ou ate mesmo videos, entrar em contato no whatsapp do profissional para que ele possa fazer isso.
-
-- Agora temos que fazer o seguinte, anexar fotos na bio do profissional. Quando um cliente fizer uma solicitação e receber o interesse do profissional por exemplo, o cliente pode entrar no perfil dele para ver as tanto as ultimas avaliações e seus anexos quanto os dados da bio e os anexos,
-acredito que dessa forma sera melhor para o cliente decidir qual profisisional contratar, o que acha dessa abordagem? faça uma analise...pois voce é especialista em mercado, produto e experiencia do usuario.
-
-- Criar Lista de top profissionais por categorias e etc
 
 - Criar fluxo livre de solicitação caso nao se encaixe em nenhuma categoria, avaliar bem, nesse caso teria que notificar tudo os profissionais.
 
 - E se nao tiver nennhum interressado na cidade? e talvez so tenha na cidade visinha? INdicar para o cliente expandir a area de interessados?
+
+- Criar uma solicitação avulsa que notifica todos os profissionais caso na tenha uma categoria definida
+
+- Procurar uma força de forçar o cliente e fazer a avaliação, se ele tiver avaliação pendende não usar o app ou então dar outro benefício

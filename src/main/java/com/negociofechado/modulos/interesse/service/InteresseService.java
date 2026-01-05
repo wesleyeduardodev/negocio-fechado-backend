@@ -10,6 +10,8 @@ import com.negociofechado.modulos.avaliacao.entity.Avaliacao;
 import com.negociofechado.modulos.avaliacao.repository.AvaliacaoRepository;
 import com.negociofechado.modulos.avaliacao.service.AvaliacaoFotoService;
 import com.negociofechado.modulos.avaliacao.service.AvaliacaoService;
+import com.negociofechado.modulos.notificacao.entity.TipoNotificacao;
+import com.negociofechado.modulos.notificacao.service.NotificacaoService;
 import com.negociofechado.modulos.profissional.service.PerfilFotoService;
 import com.negociofechado.modulos.interesse.entity.Interesse;
 import com.negociofechado.modulos.interesse.entity.StatusInteresse;
@@ -40,6 +42,7 @@ public class InteresseService {
     private final AvaliacaoFotoService avaliacaoFotoService;
     private final AvaliacaoService avaliacaoService;
     private final PerfilFotoService perfilFotoService;
+    private final NotificacaoService notificacaoService;
 
     @Transactional
     public InteresseResponse criar(Long usuarioId, CriarInteresseRequest request) {
@@ -87,7 +90,28 @@ public class InteresseService {
 
         interesseRepository.save(interesse);
 
+        notificarCliente(solicitacao, perfil);
+
         return toResponse(interesse);
+    }
+
+    private void notificarCliente(Solicitacao solicitacao, PerfilProfissional profissional) {
+        Long clienteId = solicitacao.getCliente().getId();
+        String nomeProfissional = profissional.getUsuario().getNome();
+
+        Double mediaAvaliacao = avaliacaoService.calcularMediaPorProfissional(profissional.getId());
+        String avaliacaoStr = mediaAvaliacao != null ? String.format(" (%.1f)", mediaAvaliacao) : "";
+
+        String titulo = "Novo interesse na sua solicitacao";
+        String corpo = nomeProfissional + avaliacaoStr + " quer fazer seu servico!";
+
+        notificacaoService.enviarParaUsuario(
+            clienteId,
+            TipoNotificacao.NOVO_INTERESSE,
+            titulo,
+            corpo,
+            solicitacao.getId()
+        );
     }
 
     @Transactional(readOnly = true)
